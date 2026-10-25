@@ -1,0 +1,4 @@
+# entries for the dispatch targets of tests/gen_disp.py disp.bin (RetroCodeMess ce21145a4 repro d.hints)
+code $2028 m16x16
+code $2030 m16x16
+code $2038 m16x16

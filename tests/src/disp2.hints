@@ -1,0 +1,2 @@
+# table hint overrides the heuristic (RetroCodeMess dispatch follow-up)
+table $2040 1 word m16x16

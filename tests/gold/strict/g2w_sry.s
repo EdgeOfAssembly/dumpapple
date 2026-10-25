@@ -1,0 +1,23 @@
+; dumpapple 0.9.0 listing of tests/progs/g2w_sry.bin
+; cpu 65816, platform none
+; rebuild: ca65 --cpu 65816 -t none -o g2w_sry.o g2w_sry.s
+;          ld65 -C g2w_sry.cfg -o g2w_sry.bin g2w_sry.o
+
+.setcpu "65816"
+
+; ------------------------------------------------------------
+; base $002000 length $18B
+.segment "SEG1"
+.org $002000
+entry_002000:
+; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
+    .byte $20,$80               ; 00/2000
+    .byte "! @ HELLO"           ; 00/2002
+    .byte $00,$60               ; 00/200B
+    .res 51                     ; 00/200D
+    .byte $68,$85,$F0,$68,$85,$F1,$A0,$00 ; 00/2040
+    .byte $C8,$B1,$F0,$F0       ; 00/2048 hi-ascii "H1pp"
+    .byte $06,$20,$ED,$FD,$4C,$48,$20,$98,$18,$65,$F0,$85,$F0,$A5,$F1,$69 ; 00/204C
+    .byte $00,$48,$A5,$F0,$48,$60 ; 00/205C
+    .res 286                    ; 00/2062
+    .byte $18,$FB,$A0,$00,$A9,$BF,$93,$01,$38,$FB,$60 ; 00/2180

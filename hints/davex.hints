@@ -1,0 +1,66 @@
+# Davex 1.x external-command ("xtn") interface: the shell's fixed entry points.
+# Use with:  dumpapple --hints-lib davex ...   (never enabled automatically)
+#
+# Sources (public, GPL-3.0, https://github.com/mgcaret/davex, commit 72be448):
+#   src/common/Globals.asm, lines 117-161: "xgetparm_ch = $b000" ... "xshell_info = $b07b"
+#   doc/Davex Xtn.rtf: the per-routine descriptions quoted below.
+# These addresses hold the shell's jump vectors at run time ($B000 = highmem).
+# They describe calls FROM an external command; they do not apply to the
+# shell file DAVEX.SYSTEM itself, which is loaded and relocated elsewhere.
+
+# "xmess -- Prints an inline message -- ASCII text, followed by a $00,
+#  follows the JSR to this subroutine."  (Davex Xtn.rtf)
+inline   $B006 z
+
+# "xProDOS_err -- Prints ProDOS error message from A and aborts to the command
+#  line." (Davex Xtn.rtf)  -- does not return
+noreturn $B042
+# "xerr -- Aborts to Davex's command-line prompt." (Davex Xtn.rtf)  -- does not return
+noreturn $B048
+# Not covered: xpmgr ($B057) is "jsr xpmgr / dfb COMMAND / dw PARM1 [,PARM2]";
+# the inline length depends on COMMAND (pm_copy has two parameters), which a
+# fixed `inline ADDR N` cannot express.  xProDOS_er ($B045) returns.
+
+# names (Globals.asm)
+name $B000 xgetparm_ch
+name $B003 xgetparm_n
+name $B006 xmess
+name $B009 xprint_ftype
+name $B00C xprint_access
+name $B00F xprdec_2
+name $B012 xprdec_3
+name $B015 xprdec_pad
+name $B018 xprint_path
+name $B01B xbuild_local
+name $B01E xprint_sd
+name $B021 xprint_drvr
+name $B024 xredirect
+name $B027 xpercent
+name $B02A xyesno
+name $B02D xgetln
+name $B030 xbell
+name $B033 xdowncase
+name $B036 xplural
+name $B039 xcheck_wait
+name $B03C xpr_date_ay
+name $B03F xpr_time_ay
+name $B042 xProDOS_err
+name $B045 xProDOS_er
+name $B048 xerr
+name $B04B xprdec_pady
+name $B04E xdir_setup
+name $B051 xdir_finish
+name $B054 xread1dir
+name $B057 xpmgr
+name $B05A xmmgr
+name $B05D xpoll_io
+name $B060 xprint_ver
+name $B063 xpush_level
+name $B066 xfman_open
+name $B069 xfman_read
+name $B06C xrdkey
+name $B06F xdirty
+name $B072 xgetnump
+name $B075 xyesno2
+name $B078 xdir_setup2
+name $B07B xshell_info

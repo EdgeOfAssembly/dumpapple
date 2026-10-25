@@ -1,0 +1,259 @@
+.TH DUMPAPPLE 1 2026-10-25 "dumpapple 0.9.0" "User Commands"
+.SH NAME
+dumpapple \- Apple II / IIgs (6502, 65C02, 65816) disassembler producing
+byte-identical ca65 listings
+.SH SYNOPSIS
+.B dumpapple
+[\fIoptions\fR] \fIFILE\fR
+.br
+.B dumpapple
+.RB [ \-h " | " \-\-version ]
+.SH DESCRIPTION
+.B dumpapple
+loads an Apple IIgs OMF v1/v2 load file (relocating it to a chosen base) or a
+raw
+binary, follows control flow from the entry points while tracking the M, X and E
+flags, and writes a ca65 source listing plus an ld65 configuration that rebuild
+the loaded image byte-for-byte.  Without arguments it prints usage and exits 0.
+.SH OPTIONS
+.TP
+.B \-\-omf
+Force an OMF v1/v2 load file (default: autodetect).
+.TP
+.B \-\-raw
+Force a raw binary.
+.TP
+.BI \-\-org " ADDR"
+Raw load address (default $2000).  The address is also an entry point unless
+.B \-\-no\-org\-entry
+is given.
+.TP
+.BI \-\-base " ADDR"
+OMF: base of the first relocatable segment (default $020000).
+.TP
+.BI \-\-stride " N"
+OMF: alignment between segment bases (default $10000; 0 is treated as 1).
+.TP
+.BI \-\-cpu " CPU"
+6502, 65c02 (aliases w65c02, r65c02: the WDC W65C02S, with RMB/SMB/BBR/BBS
+and WAI/STP; only early non-Rockwell 65C02s such as Apple's enhanced IIe/IIc
+run $x7/$xF as NOPs) or 65816 (aliases 65c816, w65c816); CPU names are
+case-insensitive.  With 6502 or 65c02 the image must lie in $0000-$FFFF
+(exit 1 otherwise).  Default: 65816 for OMF.  For raw input the CPU is chosen
+from flow:
+the file is decoded from the entry as a 65816 in emulation mode, and 65816 is
+picked when that flow runs a 65816-only instruction (brl, jsl, jml, rtl,
+rep, sep, clc;xce, phb/plb, phd/pld, phk, tcd/tdc, tcs/tsc, txy/tyx, xba,
+mvn/mvp, pea/pei/per, jsr (abs,x)); otherwise 65c02.  One of brl, jsl, jml, rtl,
+rep, sep or clc;xce is enough; the others need at least three, and none counts
+inside a run of text bytes.  A hit counts only where a 65C02 decode of the
+same flow reaches the same address as an instruction start (falling into it,
+at an entry, or via a jump table that decode uses); a decode that slips after
+BBR/BBS
+or $x3, a jump into an operand, or data the 65C02 decode never reaches is not
+evidence, nor is anything after a brk or a non-65816 undefined opcode.  After a
+weak first hit, a key counts only if the weak hit is not among text and the
+65816 reading runs from it to the key and 4 instructions on without brk/cop/wdm
+(immediates sized by m/x tracked through rep/sep, which widen only in native
+mode;
+carry and E are tracked through clc/sec/xce and every carry-writing instruction,
+both starting unknown (E starts in emulation with
+.BR "\-\-platform prodos8" ,
+as ProDOS 8 launches SYS/BIN files that way); after xce of unknown mode or
+plp outside emulation a width is unknown and either size may pass, at most 4
+times on a path, so a fifth such
+immediate can only make it miss 65816 code).
+Where the decodes part at a $xF long instruction (BBR/BBS on a 65C02), a key
+within 8 instructions on the 65816 reading counts only if the 65C02 reading
+breaks within 8 instructions (brk, undefined opcode, branch off the image or
+into an
+instruction); a valid 65C02 reading vouches nothing.  COP/WDM, xce with an
+unknown carry, long or stack-relative operands alone, and bytes off the flow
+are not evidence.  The listing header states the choice as
+.B ; cpu: CPU (auto: reason)
+and --cpu overrides it.  Selects the decoder and the ca65 .setcpu.
+.TP
+.BI \-\-entry " ADDR[:STATE]"
+Add an entry point, optionally with its own width state; repeatable.  ADDR is
+$hex, 0xhex, hex, or SEG:OFF for OMF.
+.TP
+.BI \-\-platform " P"
+none, prodos8 or gsos (default: gsos for OMF, none for raw).  gsos: JSL $E100A8
+is followed by 6 inline bytes (call number, parameter block pointer); prodos8:
+JSR $BF00 by 3 (command, parameter list pointer).  Each rule that fires is
+commented in the listing.  gsos with \-\-cpu 6502 or 65c02 prints a warning,
+as GS/OS calls are 65816 JSLs and the rule cannot fire.
+.TP
+.B \-\-no\-tables
+Do not follow jump tables or push-address+RTS/RTL dispatch.
+.TP
+.BI \-\-hints\-lib " NAME"
+Also read the shipped hint file NAME.hints (from $DUMPAPPLE_HINTS, hints/
+next to the binary, or /usr/local/share/dumpapple/hints), e.g. davex.  Never
+applied
+automatically.  \-\-hints may also be given more than once.
+.TP
+.B \-\-no\-auto\-inline
+Do not detect routines that read a terminated string after their call.
+.TP
+.B \-\-no\-imm\-pointers
+Do not treat lda #<x / ldx|ldy #>x pairs as code pointers.
+.TP
+.BI \-\-state " S"
+Entry width state: e, m8x8, m8x16, m16x8, m16x16.  Default e for raw input,
+m16x16 for OMF.
+.TP
+.B \-\-strict\-smc
+Stores with unknown targets may modify code; decoding stops there.  CPU
+auto-detect ignores it.
+.TP
+.B \-\-seg\-entries
+OMF: also seed the ENTRY of every other static code segment.  Default: only the
+first static code segment's ENTRY (as the GS/OS loader); data, jump-table,
+DP/stack and dynamic (KIND $8000) segments never seed code.
+This is a heuristic: a code-typed segment may hold data, and its ENTRY is then
+decoded anyway (in one real file it produces a false
+.B rts
+at a music segment's entry).  The default is the reliable output.
+Independently of this option, every load-file-1 entry of a KIND $02 jump-table
+segment (8-byte header, then 14-byte entries: user ID, load-file, load-segment,
+offset, JSL to loader; load-file 0 ends) is an entry point, dynamic segments
+included.  The table is listed as data with each entry labelled
+.BR jt_ADDR ;
+~ExpressLoad is never code.
+.TP
+.B \-\-no\-seg\-entries
+OMF: seed only the first static code segment's ENTRY (default; cancels
+.BR \-\-seg\-entries ).
+.TP
+.BI \-\-hints " FILE"
+Hints file (also holds name directives), see below; repeatable.
+.TP
+.BI \-o " FILE"
+Write the listing there.  If FILE ends in .s the ld65 config is written next
+to it with .cfg replacing .s; otherwise no config is written unless
+.B \-\-cfg
+is given (so \-o /dev/null works).  Default: listing to standard output.
+.TP
+.BI \-\-cfg " FILE"
+Write the ld65 config to FILE.
+.TP
+.BI \-\-dump\-image " FILE"
+Write the loaded, relocated image.
+.TP
+.B \-\-verify
+Assemble with ca65, link with ld65 and compare with the image; exit status 3
+if the rebuild fails to assemble or link or differs.  The work directory
+/tmp/dumpapple\-verify\-XXXXXX is then kept for inspection.
+.TP
+.BI \-\-ca65 " PATH"
+Assembler used by \-\-verify (default ca65 from PATH).
+.TP
+.BI \-\-ld65 " PATH"
+Linker used by \-\-verify (default ld65 from PATH).
+.TP
+.B \-q
+Quiet.
+.TP
+.BR \-h ", " \-\-help
+Print usage and exit 0 (also with no arguments).
+.TP
+.B \-\-version
+Print the version and exit 0.
+.SH HINTS FILE
+One directive per line; text after # is a comment.
+.nf
+  entry   ADDR [STATE]     code entry point
+  state   ADDR STATE       force width state when flow reaches ADDR
+  returns ADDR STATE       calls to ADDR return in STATE
+  noreturn ADDR            calls to ADDR (or the call at ADDR) do not return
+  region  FILEOFF LEN ADDR raw: list file bytes FILEOFF.. at ADDR (run address)
+  data    ADDR LEN         never decode as code
+  word    ADDR LEN         data emitted as .word
+  name    ADDR NAME        label name
+  comment ADDR TEXT        comment line before ADDR
+  segbase SEGNUM ADDR      OMF: load segment SEGNUM at ADDR
+  table   ADDR COUNT [word|long|rts] [STATE]
+                           jump table, overrides the heuristic; without
+                           STATE the state at its jump site is used
+  inline  ADDR N           jsr/jsl to ADDR is followed by N inline bytes
+  inline  ADDR z|hi|lo|len ... by a string ending at a zero byte / bit 7
+                           set / bit 7 clear, or led by its length byte
+  rtstable ADDR N [STATE]  rts dispatch table: N words, each target-1
+  rtstable split HI LO N [STATE]
+                           split rts table: N high bytes at HI, low at LO
+  (returns ADDR STATE on a BRK address lets flow continue after that BRK)
+.fi
+ADDR accepts $hex, 0xhex or bare hex, and SEG:OFF for OMF.  STATE is one of
+e, m8x8, m8x16, m16x8, m16x16.
+.SH JUMP TABLES
+jmp (abs,x), jsr (abs,x), jmp (abs), jml [abs] and push-address-minus-1 +
+RTS/RTL sequences are followed.  Table length is bounded heuristically (valid
+in-image targets that decode, stopping at labels, code, other tables or a
+change in the OMF relocation pattern); each table is commented with its origin
+and stop reason.  Auto tables are re-bounded to a fixpoint when code or
+references found later reach into them.  COP continues after its signature
+byte; BRK ends flow.  For OMF input, an instruction whose bytes carry a
+relocated field that is not wholly inside its operand bytes is treated as data.
+.SH WIDTH TRACKING
+REP/SEP, CLC/SEC+XCE and PHP/PLP update the state.  Conflicting states at a
+join point make the flag unknown; an immediate whose size depends on an unknown
+flag stops decoding there (the bytes are listed as data with a comment) rather
+than guessing.
+.SH EXIT STATUS
+.TP
+.B 0
+Success (also no arguments, \-\-help, \-\-version).
+.TP
+.B 1
+Cannot read the input or a hints file, bad OMF, empty input, image out of
+range, write error, \-\-hints\-lib file not found.
+.TP
+.B 2
+Usage error: unknown option, missing or bad argument, more than one FILE,
+options without FILE.
+.TP
+.B 3
+\-\-verify failed: the rebuild did not assemble or link, or differs (the work
+directory /tmp/dumpapple\-verify\-XXXXXX is kept).
+.SH ENVIRONMENT
+.TP
+.B DUMPAPPLE_HINTS
+First directory searched by \-\-hints\-lib.
+.SH FILES
+.TP
+.I <bindir>/hints
+Shipped hint files next to the binary (found via /proc/self/exe).
+.TP
+.I /usr/local/share/dumpapple/hints
+Installed hint files.
+.TP
+.I /tmp/dumpapple\-verify\-*
+Work directories of failed \-\-verify runs.
+.SH EXAMPLES
+.nf
+  dumpapple PROG.SYS16 \-o prog.s \-\-verify
+  dumpapple \-\-org 2000 \-\-cpu 65816 \-\-state e code.bin \-o code.s
+  dumpapple \-\-org 0800 \-\-cpu 6502 apple2.bin \-o a2.s
+  dumpapple \-\-platform prodos8 \-\-org 2000 \-\-verify PROG.SYSTEM
+.fi
+.SH REBUILD
+.nf
+  ca65 \-\-cpu 65816 \-t none \-o prog.o prog.s
+  ld65 \-C prog.cfg \-o prog.bin prog.o
+.fi
+.SH BUGS
+Rockwell bit-op code followed directly by bytes that also read as valid 65816
+code may mislead CPU auto-detect; use \-\-cpu.
+6502 code built on purpose to look like 65816 (weak opcodes on agreed boundaries
+running cleanly into a rep or sep) still picks 65816; use \-\-cpu.
+Report bugs at https://github.com/EdgeOfAssembly/dumpapple/issues.
+.SH AUTHORS
+EdgeOfAssembly.
+.SH SEE ALSO
+.BR ca65 (1),
+.BR ld65 (1),
+.BR da65 (1),
+.UR https://github.com/EdgeOfAssembly/dumpexe
+dumpexe
+.UE

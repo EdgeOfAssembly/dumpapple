@@ -1,0 +1,13 @@
+# hints for bank.bin (org $021000)
+word    $021036 6        # jump table used by jmp (jtab,x)
+entry   $02103C m16x16
+entry   $02103E m16x16
+entry   $021040 m16x16
+name    $021036 jtab
+name    $02103C handler0
+comment $021000 program start
+returns $02100D m16x16
+entry   $02102C m16x16
+entry   $02102F m16x16
+entry   $021031 m16x16
+entry   $021033 m16x16

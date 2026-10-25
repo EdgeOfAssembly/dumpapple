@@ -1,0 +1,9 @@
+/dumpapple
+/dumpapple-asan
+/fuzz/fuzz_dumpapple
+/tools/mkomf
+/tests/out/
+/tests/progs/
+/tests/omf/*.omf
+/tests/omf/*.expected
+*.o
