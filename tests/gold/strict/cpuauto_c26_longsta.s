@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c26_longsta.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c26_longsta.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c26_longsta.o cpuauto_c26_longsta.s
 ;          ld65 -C cpuauto_c26_longsta.cfg -o cpuauto_c26_longsta.bin cpuauto_c26_longsta.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65816 (auto: 65816-only rep at $2007 on flow from the entry (2 such instructions); --cpu overrides)
 .setcpu "65816"

@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2s_rngu.bin
+; dumpapple 0.10.0 listing of tests/progs/g2s_rngu.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2s_rngu.o g2s_rngu.s
 ;          ld65 -C g2s_rngu.cfg -o g2s_rngu.bin g2s_rngu.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $002003: COUT $FDED goes through CSW ($36/$37), which the image may change (decoding stopped at $218A (opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)), code there not checked); bytes after the call left undecoded
 
 .setcpu "6502"

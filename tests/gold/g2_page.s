@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2_page.bin
+; dumpapple 0.10.0 listing of tests/progs/g2_page.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2_page.o g2_page.s
 ;          ld65 -C g2_page.cfg -o g2_page.bin g2_page.o

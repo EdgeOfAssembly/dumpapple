@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2s_816e.bin
+; dumpapple 0.10.0 listing of tests/progs/g2s_816e.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2s_816e.o g2s_816e.s
 ;          ld65 -C g2s_816e.cfg -o g2s_816e.bin g2s_816e.o

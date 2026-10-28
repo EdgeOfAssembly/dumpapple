@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/lenpref.bin
+; dumpapple 0.10.0 listing of tests/progs/lenpref.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o lenpref.o lenpref.s
 ;          ld65 -C lenpref.cfg -o lenpref.bin lenpref.o

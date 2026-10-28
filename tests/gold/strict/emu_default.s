@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/emu.bin
+; dumpapple 0.10.0 listing of tests/progs/emu.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o emu_default.o emu_default.s
 ;          ld65 -C emu_default.cfg -o emu_default.bin emu_default.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: auto table $00202D: 1 entry used by $00201E (stopped: limit)
 
 ; cpu: 65C02 (auto: no 65816-only instruction on flow from the entry; --cpu overrides)

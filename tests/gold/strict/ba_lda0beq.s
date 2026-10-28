@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_lda0beq.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_lda0beq.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o ba_lda0beq.o ba_lda0beq.s
 ;          ld65 -C ba_lda0beq.cfg -o ba_lda0beq.bin ba_lda0beq.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65C02"
 

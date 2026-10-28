@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2s_range.bin
+; dumpapple 0.10.0 listing of tests/progs/g2s_range.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2s_range.o g2s_range.s
 ;          ld65 -C g2s_range.cfg -o g2s_range.bin g2s_range.o

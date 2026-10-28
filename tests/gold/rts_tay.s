@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rts_tay.bin
+; dumpapple 0.10.0 listing of tests/progs/rts_tay.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rts_tay.o rts_tay.s
 ;          ld65 -C rts_tay.cfg -o rts_tay.bin rts_tay.o

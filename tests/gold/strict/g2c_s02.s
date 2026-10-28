@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2c_s02.bin
+; dumpapple 0.10.0 listing of tests/progs/g2c_s02.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2c_s02.o g2c_s02.s
 ;          ld65 -C g2c_s02.cfg -o g2c_s02.bin g2c_s02.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $00210E: helper code at $2040 may be changed by the store at $2107 (self-modifying code); bytes after the call left undecoded
 
 .setcpu "65816"

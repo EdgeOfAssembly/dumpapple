@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c23_longbefore.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c23_longbefore.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c23_longbefore.o cpuauto_c23_longbefore.s
 ;          ld65 -C cpuauto_c23_longbefore.cfg -o cpuauto_c23_longbefore.bin cpuauto_c23_longbefore.o

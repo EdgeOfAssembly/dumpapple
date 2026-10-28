@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/r05.bin
+; dumpapple 0.10.0 listing of tests/progs/r05.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o r05.o r05.s
 ;          ld65 -C r05.cfg -o r05.bin r05.o

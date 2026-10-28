@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_secbcs.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_secbcs.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o ba_secbcs.o ba_secbcs.s
 ;          ld65 -C ba_secbcs.cfg -o ba_secbcs.bin ba_secbcs.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

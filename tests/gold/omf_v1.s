@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/omf/fixture_v1.omf
+; dumpapple 0.10.0 listing of tests/omf/fixture_v1.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o omf_v1.o omf_v1.s
 ;          ld65 -C omf_v1.cfg -o omf_v1.bin omf_v1.o

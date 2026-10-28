@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2_jmpind.bin
+; dumpapple 0.10.0 listing of tests/progs/g2_jmpind.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2_jmpind.o g2_jmpind.s
 ;          ld65 -C g2_jmpind.cfg -o g2_jmpind.bin g2_jmpind.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

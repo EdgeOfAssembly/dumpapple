@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c1_native.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c1_native.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c1_native.o cpuauto_c1_native.s
 ;          ld65 -C cpuauto_c1_native.cfg -o cpuauto_c1_native.bin cpuauto_c1_native.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65816 (auto: 65816-only brl at $2000 on flow from the entry (3 such instructions); --cpu overrides)
 .setcpu "65816"

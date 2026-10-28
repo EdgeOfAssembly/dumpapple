@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2b_n07.bin
+; dumpapple 0.10.0 listing of tests/progs/g2b_n07.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o g2b_n07.o g2b_n07.s
 ;          ld65 -C g2b_n07.cfg -o g2b_n07.bin g2b_n07.o

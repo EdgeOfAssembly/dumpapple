@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rts_tail.bin
+; dumpapple 0.10.0 listing of tests/progs/rts_tail.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rts_tail.o rts_tail.s
 ;          ld65 -C rts_tail.cfg -o rts_tail.bin rts_tail.o

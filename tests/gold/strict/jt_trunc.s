@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/jt_trunc.omf
+; dumpapple 0.10.0 listing of tests/progs/jt_trunc.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o jt_trunc.o jt_trunc.s
 ;          ld65 -C jt_trunc.cfg -o jt_trunc.bin jt_trunc.o
 ; input: OMF v2 load file; output is the relocated loaded image, segments in file order
+; note: --strict-smc: seed targets are off (--seed-targets turns them back on)
 ; note: flow into data at $040012 not followed
 ; note: flow into data at $040020 not followed
 

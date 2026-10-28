@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2n_ind.bin
+; dumpapple 0.10.0 listing of tests/progs/g2n_ind.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2n_ind.o g2n_ind.s
 ;          ld65 -C g2n_ind.cfg -o g2n_ind.bin g2n_ind.o

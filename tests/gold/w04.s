@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/w04.bin
+; dumpapple 0.10.0 listing of tests/progs/w04.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o w04.o w04.s
 ;          ld65 -C w04.cfg -o w04.bin w04.o

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_clc.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_clc.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_clc.o g1_clc.s
 ;          ld65 -C g1_clc.cfg -o g1_clc.bin g1_clc.o

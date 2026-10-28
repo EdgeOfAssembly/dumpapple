@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/jt.omf
+; dumpapple 0.10.0 listing of tests/progs/jt.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o jt_all.o jt_all.s
 ;          ld65 -C jt_all.cfg -o jt_all.bin jt_all.o

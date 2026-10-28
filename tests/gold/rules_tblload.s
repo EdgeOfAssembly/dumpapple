@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_tblload.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_tblload.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o rules_tblload.o rules_tblload.s
 ;          ld65 -C rules_tblload.cfg -o rules_tblload.bin rules_tblload.o

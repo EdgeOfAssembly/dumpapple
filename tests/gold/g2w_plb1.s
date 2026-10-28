@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_plb1.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_plb1.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2w_plb1.o g2w_plb1.s
 ;          ld65 -C g2w_plb1.cfg -o g2w_plb1.bin g2w_plb1.o

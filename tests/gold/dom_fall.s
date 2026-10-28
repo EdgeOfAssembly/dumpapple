@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/dom_fall.bin
+; dumpapple 0.10.0 listing of tests/progs/dom_fall.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o dom_fall.o dom_fall.s
 ;          ld65 -C dom_fall.cfg -o dom_fall.bin dom_fall.o

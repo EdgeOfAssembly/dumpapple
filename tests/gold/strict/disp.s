@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/disp.bin
+; dumpapple 0.10.0 listing of tests/progs/disp.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o disp.o disp.s
 ;          ld65 -C disp.cfg -o disp.bin disp.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: auto table $002020: 2 entries used by $002007 (stopped: target outside image)
 
 .setcpu "65816"

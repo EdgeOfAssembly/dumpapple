@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2c_p07.bin
+; dumpapple 0.10.0 listing of tests/progs/g2c_p07.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2c_p07.o g2c_p07.s
 ;          ld65 -C g2c_p07.cfg -o g2c_p07.bin g2c_p07.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $00210D: COUT $FDED goes through CSW ($36/$37), which the image may change (store that may reach CSW at $210B); bytes after the call left undecoded
 
 .setcpu "6502"

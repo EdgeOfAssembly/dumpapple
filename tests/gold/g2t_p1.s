@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2t_p1.bin
+; dumpapple 0.10.0 listing of tests/progs/g2t_p1.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o g2t_p1.o g2t_p1.s
 ;          ld65 -C g2t_p1.cfg -o g2t_p1.bin g2t_p1.o

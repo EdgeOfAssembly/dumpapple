@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2b_n11.bin
+; dumpapple 0.10.0 listing of tests/progs/g2b_n11.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2b_n11.o g2b_n11.s
 ;          ld65 -C g2b_n11.cfg -o g2b_n11.bin g2b_n11.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

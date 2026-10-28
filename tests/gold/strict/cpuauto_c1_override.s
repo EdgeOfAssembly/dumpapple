@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c1_native.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c1_native.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_c1_override.o cpuauto_c1_override.s
 ;          ld65 -C cpuauto_c1_override.cfg -o cpuauto_c1_override.bin cpuauto_c1_override.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65C02"
 

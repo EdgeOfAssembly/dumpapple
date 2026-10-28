@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/t03.bin
+; dumpapple 0.10.0 listing of tests/progs/t03.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o t03.o t03.s
 ;          ld65 -C t03.cfg -o t03.bin t03.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $002103: COUT $FDED goes through CSW ($36/$37), which the image may change (store that may reach CSW at $218C); bytes after the call left undecoded
 
 .setcpu "6502"

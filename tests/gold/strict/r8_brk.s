@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/r8_brk.bin
+; dumpapple 0.10.0 listing of tests/progs/r8_brk.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o r8_brk.o r8_brk.s
 ;          ld65 -C r8_brk.cfg -o r8_brk.bin r8_brk.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: auto table $002005: 1 entry used by $002002 (stopped: target inside the instruction at $00200B)
 
 .setcpu "65C02"

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_lda1bne.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_lda1bne.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o ba_lda1bne.o ba_lda1bne.s
 ;          ld65 -C ba_lda1bne.cfg -o ba_lda1bne.bin ba_lda1bne.o

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/brk1.bin
+; dumpapple 0.10.0 listing of tests/progs/brk1.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o brk1.o brk1.s
 ;          ld65 -C brk1.cfg -o brk1.bin brk1.o

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c6_rockwell.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c6_rockwell.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_c6_rockwell.o cpuauto_c6_rockwell.s
 ;          ld65 -C cpuauto_c6_rockwell.cfg -o cpuauto_c6_rockwell.bin cpuauto_c6_rockwell.o

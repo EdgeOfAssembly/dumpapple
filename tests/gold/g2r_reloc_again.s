@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2r_reloc_again.bin
+; dumpapple 0.10.0 listing of tests/progs/g2r_reloc_again.bin
 ; cpu 6502, platform prodos8
 ; rebuild: ca65 --cpu 6502 -t none -o g2r_reloc_again.o g2r_reloc_again.s
 ;          ld65 -C g2r_reloc_again.cfg -o g2r_reloc_again.bin g2r_reloc_again.o

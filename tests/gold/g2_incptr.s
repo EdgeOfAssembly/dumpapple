@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2_incptr.bin
+; dumpapple 0.10.0 listing of tests/progs/g2_incptr.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2_incptr.o g2_incptr.s
 ;          ld65 -C g2_incptr.cfg -o g2_incptr.bin g2_incptr.o

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_p8quit.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_p8quit.bin
 ; cpu 6502, platform prodos8
 ; rebuild: ca65 --cpu 6502 -t none -o rules_p8quit.o rules_p8quit.s
 ;          ld65 -C rules_p8quit.cfg -o rules_p8quit.bin rules_p8quit.o

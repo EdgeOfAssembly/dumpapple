@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/prodos8_mli.bin
+; dumpapple 0.10.0 listing of tests/progs/prodos8_mli.bin
 ; cpu 6502, platform prodos8
 ; rebuild: ca65 --cpu 6502 -t none -o prodos8_mli.o prodos8_mli.s
 ;          ld65 -C prodos8_mli.cfg -o prodos8_mli.bin prodos8_mli.o

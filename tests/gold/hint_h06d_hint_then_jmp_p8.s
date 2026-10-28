@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/src/hint_h06d_hint_then_jmp_p8.bin
+; dumpapple 0.10.0 listing of tests/src/hint_h06d_hint_then_jmp_p8.bin
 ; cpu 65c02, platform prodos8
 ; rebuild: ca65 --cpu 65C02 -t none -o hint_h06d_hint_then_jmp_p8.o hint_h06d_hint_then_jmp_p8.s
 ;          ld65 -C hint_h06d_hint_then_jmp_p8.cfg -o hint_h06d_hint_then_jmp_p8.bin hint_h06d_hint_then_jmp_p8.o

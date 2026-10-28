@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/t6_cop.bin
+; dumpapple 0.10.0 listing of tests/progs/t6_cop.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o t6_cop.o t6_cop.s
 ;          ld65 -C t6_cop.cfg -o t6_cop.bin t6_cop.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65816"
 

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_s04b.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_s04b.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o ba_s04b.o ba_s04b.s
 ;          ld65 -C ba_s04b.cfg -o ba_s04b.bin ba_s04b.o

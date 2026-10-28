@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/x12_emuplp.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/x12_emuplp.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_x12_emuplp.o cpuauto_x12_emuplp.s
 ;          ld65 -C cpuauto_x12_emuplp.cfg -o cpuauto_x12_emuplp.bin cpuauto_x12_emuplp.o

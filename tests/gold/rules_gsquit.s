@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_gsquit.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_gsquit.bin
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o rules_gsquit.o rules_gsquit.s
 ;          ld65 -C rules_gsquit.cfg -o rules_gsquit.bin rules_gsquit.o

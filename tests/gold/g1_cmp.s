@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_cmp.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_cmp.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_cmp.o g1_cmp.s
 ;          ld65 -C g1_cmp.cfg -o g1_cmp.bin g1_cmp.o

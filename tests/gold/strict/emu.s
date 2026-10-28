@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/emu.bin
+; dumpapple 0.10.0 listing of tests/progs/emu.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o emu.o emu.s
 ;          ld65 -C emu.cfg -o emu.bin emu.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: auto table $00202D: 1 entry used by $00201E (stopped: limit)
 
 .setcpu "65816"

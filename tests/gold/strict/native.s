@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/native.bin
+; dumpapple 0.10.0 listing of tests/progs/native.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o native.o native.s
 ;          ld65 -C native.cfg -o native.bin native.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65816"
 

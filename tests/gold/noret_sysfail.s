@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/noret_sysfail.bin
+; dumpapple 0.10.0 listing of tests/progs/noret_sysfail.bin
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o noret_sysfail.o noret_sysfail.s
 ;          ld65 -C noret_sysfail.cfg -o noret_sysfail.bin noret_sysfail.o

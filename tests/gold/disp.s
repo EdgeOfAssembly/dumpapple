@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/disp.bin
+; dumpapple 0.10.0 listing of tests/progs/disp.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o disp.o disp.s
 ;          ld65 -C disp.cfg -o disp.bin disp.o

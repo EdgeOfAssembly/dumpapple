@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c9_jsl.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c9_jsl.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c9_jsl.o cpuauto_c9_jsl.s
 ;          ld65 -C cpuauto_c9_jsl.cfg -o cpuauto_c9_jsl.bin cpuauto_c9_jsl.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65816 (auto: 65816-only jsl at $2002 on flow from the entry; --cpu overrides)
 .setcpu "65816"

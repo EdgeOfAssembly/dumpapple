@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/disp2.bin
+; dumpapple 0.10.0 listing of tests/progs/disp2.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o disp2_hint.o disp2_hint.s
 ;          ld65 -C disp2_hint.cfg -o disp2_hint.bin disp2_hint.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: hinted table $002040: 1 entry used by $002007
 ; note: auto table $002044: 1 entry used by $00200E (stopped: target outside image)
 ; note: auto table $002048: 1 entry used by $002033 (stopped: limit)

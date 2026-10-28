@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_wclc.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_wclc.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_wclc.o g1_wclc.s
 ;          ld65 -C g1_wclc.cfg -o g1_wclc.bin g1_wclc.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: length-prefixed helper $00200D: a call site does not fit the length rule; inline length not applied
 
 .setcpu "6502"

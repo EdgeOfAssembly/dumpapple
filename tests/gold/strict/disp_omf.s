@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/disp.omf
+; dumpapple 0.10.0 listing of tests/progs/disp.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o disp_omf.o disp_omf.s
 ;          ld65 -C disp_omf.cfg -o disp_omf.bin disp_omf.o
 ; input: OMF v2 load file; output is the relocated loaded image, segments in file order
+; note: --strict-smc: seed targets are off (--seed-targets turns them back on)
 ; note: auto table $020020: 2 entries used by $020007 (stopped: relocation pattern changed)
 
 .setcpu "65816"

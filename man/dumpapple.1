@@ -1,4 +1,4 @@
-.TH DUMPAPPLE 1 2026-10-25 "dumpapple 0.9.0" "User Commands"
+.TH DUMPAPPLE 1 2026-10-28 "dumpapple 0.10.0" "User Commands"
 .SH NAME
 dumpapple \- Apple II / IIgs (6502, 65C02, 65816) disassembler producing
 byte-identical ca65 listings
@@ -75,7 +75,9 @@ and --cpu overrides it.  Selects the decoder and the ca65 .setcpu.
 .TP
 .BI \-\-entry " ADDR[:STATE]"
 Add an entry point, optionally with its own width state; repeatable.  ADDR is
-$hex, 0xhex, hex, or SEG:OFF for OMF.
+$hex, 0xhex, hex, or SEG:OFF for OMF.  The on-disk bytes at ADDR are always
+decoded, even when a store may change them (the listing notes it) or another
+instruction overlaps them (that instruction is dropped).
 .TP
 .BI \-\-platform " P"
 none, prodos8 or gsos (default: gsos for OMF, none for raw).  gsos: JSL $E100A8
@@ -104,8 +106,33 @@ Entry width state: e, m8x8, m8x16, m16x8, m16x16.  Default e for raw input,
 m16x16 for OMF.
 .TP
 .B \-\-strict\-smc
-Stores with unknown targets may modify code; decoding stops there.  CPU
-auto-detect ignores it.
+Stores with unknown targets may modify code; decoding stops there.  Without it
+such stores are advisory for code: a store through an unresolved pointer, or an
+indexed store whose index no value range or counted loop bounds, does not stop
+decoding (it still counts for CSW and helper checks).  CPU auto-detect ignores it.
+The straight run from a load entry up to the first store, call, conditional
+branch or join runs before any store and stays code as on disk ("decoded as
+on disk: runs from the entry before any store"); decoding stops at the first
+questionable point after it.  An unconditional jmp abs in the run continues
+it at the target; a call (also to ROM) ends it.  A site in that run that any
+other jump or branch also reaches can run again after a store: it is dropped
+only if some store's range covers it, and is otherwise decoded as usual (a
+counted loop's body after its ldy #0 stays code).  Seed targets and auto
+regions (raw input only) are off under \-\-strict\-smc unless
+\-\-seed\-targets / \-\-auto\-region is given; the header says so.
+.TP
+.B \-\-no\-auto\-region
+Raw input without region hints: a recognized copy\-then\-jump (monitor MOVE
+JSR $FE2C with constant A1/A2/A4, or a page\-copy loop) whose jump lands in the
+copied block makes that block a REGION listed at its run address.  On by
+default (\-\-auto\-region) except under \-\-strict\-smc; the note "auto region" names each one.  Skipped
+when the destination overlaps the file or the mover copies itself.
+.TP
+.B \-\-no\-seed\-targets
+When decoded code jumps to RAM outside the image, undecoded JSR/JMP absolute
+operands that point into the image are seeded as entries if the target follows
+a terminator, is not fill, and decodes cleanly.  On by default
+(\-\-seed\-targets) except under \-\-strict\-smc; each one gets an "auto entry" note.
 .TP
 .B \-\-seg\-entries
 OMF: also seed the ENTRY of every other static code segment.  Default: only the

@@ -16,7 +16,7 @@ ASAN_FLAGS = -std=c++20 -Wall -Wextra -O1 -g -fsanitize=address,undefined -fno-o
 SRCS = src/omf.cpp src/decode.cpp src/hints.cpp src/analyze.cpp src/emit.cpp
 HDRS = $(wildcard src/*.h)
 
-all: dumpapple
+all: dumpapple tools/mkomf
 
 check-capstone:
 	@test -f "$(CAPSTONE_INC)/capstone/capstone.h" || { echo "error: Capstone headers not found in $(CAPSTONE_INC) (set CAPSTONE_PREFIX; need Capstone >= 6.0.0 Alpha11)"; exit 1; }

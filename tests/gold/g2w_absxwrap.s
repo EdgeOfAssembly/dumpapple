@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_absxwrap.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_absxwrap.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2w_absxwrap.o g2w_absxwrap.s
 ;          ld65 -C g2w_absxwrap.cfg -o g2w_absxwrap.bin g2w_absxwrap.o

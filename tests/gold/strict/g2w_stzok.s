@@ -1,9 +1,10 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_stzok.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_stzok.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o g2w_stzok.o g2w_stzok.s
 ;          ld65 -C g2w_stzok.cfg -o g2w_stzok.bin g2w_stzok.o
 ; assumes CSW hook preserves X/Y (an inline-string helper calls COUT $FDED; nothing in the image stores to CSW $36/$37)
 ; assumes decimal mode clear at entry (an inline-string helper adds/subtracts; no cld/sed on the way to its call)
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65C02"
 

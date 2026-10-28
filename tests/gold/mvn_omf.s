@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/mvn.omf
+; dumpapple 0.10.0 listing of tests/progs/mvn.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o mvn_omf.o mvn_omf.s
 ;          ld65 -C mvn_omf.cfg -o mvn_omf.bin mvn_omf.o

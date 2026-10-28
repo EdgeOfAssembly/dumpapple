@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rmw_loop.bin
+; dumpapple 0.10.0 listing of tests/progs/rmw_loop.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rmw_loop.o rmw_loop.s
 ;          ld65 -C rmw_loop.cfg -o rmw_loop.bin rmw_loop.o

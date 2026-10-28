@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/d01_txy16.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/d01_txy16.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_d01_txy16.o cpuauto_d01_txy16.s
 ;          ld65 -C cpuauto_d01_txy16.cfg -o cpuauto_d01_txy16.bin cpuauto_d01_txy16.o

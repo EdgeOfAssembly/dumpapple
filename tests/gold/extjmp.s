@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/extjmp.bin
+; dumpapple 0.10.0 listing of tests/progs/extjmp.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o extjmp.o extjmp.s
 ;          ld65 -C extjmp.cfg -o extjmp.bin extjmp.o

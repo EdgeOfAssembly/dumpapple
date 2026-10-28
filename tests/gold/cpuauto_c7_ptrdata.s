@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c7_ptrdata.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c7_ptrdata.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_c7_ptrdata.o cpuauto_c7_ptrdata.s
 ;          ld65 -C cpuauto_c7_ptrdata.cfg -o cpuauto_c7_ptrdata.bin cpuauto_c7_ptrdata.o

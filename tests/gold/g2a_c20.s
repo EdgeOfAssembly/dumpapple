@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2a_c20.bin
+; dumpapple 0.10.0 listing of tests/progs/g2a_c20.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2a_c20.o g2a_c20.s
 ;          ld65 -C g2a_c20.cfg -o g2a_c20.bin g2a_c20.o

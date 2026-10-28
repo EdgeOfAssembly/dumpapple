@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_wclc.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_wclc.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_wclc.o g1_wclc.s
 ;          ld65 -C g1_wclc.cfg -o g1_wclc.bin g1_wclc.o

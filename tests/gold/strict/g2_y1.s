@@ -1,9 +1,10 @@
-; dumpapple 0.9.0 listing of tests/progs/g2_y1.bin
+; dumpapple 0.10.0 listing of tests/progs/g2_y1.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2_y1.o g2_y1.s
 ;          ld65 -C g2_y1.cfg -o g2_y1.bin g2_y1.o
 ; assumes CSW hook preserves X/Y (an inline-string helper calls COUT $FDED; nothing in the image stores to CSW $36/$37)
 ; assumes decimal mode clear at entry (an inline-string helper adds/subtracts; no cld/sed on the way to its call)
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

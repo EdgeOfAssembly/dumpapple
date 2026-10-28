@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c28_phkplb.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c28_phkplb.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c28_phkplb.o cpuauto_c28_phkplb.s
 ;          ld65 -C cpuauto_c28_phkplb.cfg -o cpuauto_c28_phkplb.bin cpuauto_c28_phkplb.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65816 (auto: 65816-only rep at $2002 on flow from the entry (2 such instructions); --cpu overrides)
 .setcpu "65816"

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/extstr.bin
+; dumpapple 0.10.0 listing of tests/progs/extstr.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o extstr.o extstr.s
 ;          ld65 -C extstr.cfg -o extstr.bin extstr.o

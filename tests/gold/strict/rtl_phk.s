@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/rtl_phk.bin
+; dumpapple 0.10.0 listing of tests/progs/rtl_phk.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o rtl_phk.o rtl_phk.s
 ;          ld65 -C rtl_phk.cfg -o rtl_phk.bin rtl_phk.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: auto table $002010: 1 entry used by $00200B (stopped: index guard)
 
 .setcpu "65816"

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2t_skok.bin
+; dumpapple 0.10.0 listing of tests/progs/g2t_skok.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o g2t_skok.o g2t_skok.s
 ;          ld65 -C g2t_skok.cfg -o g2t_skok.bin g2t_skok.o

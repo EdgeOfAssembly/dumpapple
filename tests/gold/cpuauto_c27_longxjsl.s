@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c27_longxjsl.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c27_longxjsl.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c27_longxjsl.o cpuauto_c27_longxjsl.s
 ;          ld65 -C cpuauto_c27_longxjsl.cfg -o cpuauto_c27_longxjsl.bin cpuauto_c27_longxjsl.o

@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/b2_mismatch.bin
+; dumpapple 0.10.0 listing of tests/progs/b2_mismatch.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o b2_mismatch.o b2_mismatch.s
 ;          ld65 -C b2_mismatch.cfg -o b2_mismatch.bin b2_mismatch.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

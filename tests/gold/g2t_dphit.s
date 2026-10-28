@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2t_dphit.bin
+; dumpapple 0.10.0 listing of tests/progs/g2t_dphit.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2t_dphit.o g2t_dphit.s
 ;          ld65 -C g2t_dphit.cfg -o g2t_dphit.bin g2t_dphit.o

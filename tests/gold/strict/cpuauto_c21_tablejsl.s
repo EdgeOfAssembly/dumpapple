@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c21_tablejsl.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c21_tablejsl.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c21_tablejsl.o cpuauto_c21_tablejsl.s
 ;          ld65 -C cpuauto_c21_tablejsl.cfg -o cpuauto_c21_tablejsl.bin cpuauto_c21_tablejsl.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: auto table $002005: 2 entries used by $002002 (stopped: target outside image)
 
 ; cpu: 65816 (auto: 65816-only rep at $200A on flow from the entry (2 such instructions); --cpu overrides)

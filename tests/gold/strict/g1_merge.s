@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_merge.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_merge.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_merge.o g1_merge.s
 ;          ld65 -C g1_merge.cfg -o g1_merge.bin g1_merge.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: length-prefixed helper $00200E: carry unknown at the return-address add; inline length not applied
 
 .setcpu "6502"

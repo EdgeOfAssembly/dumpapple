@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/extstr.bin
+; dumpapple 0.10.0 listing of tests/progs/extstr.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o extstr.o extstr.s
 ;          ld65 -C extstr.cfg -o extstr.bin extstr.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: suggested hint: inline $003000 z (3 call sites look like strings)
 
 .setcpu "6502"

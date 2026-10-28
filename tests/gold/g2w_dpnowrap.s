@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_dpnowrap.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_dpnowrap.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2w_dpnowrap.o g2w_dpnowrap.s
 ;          ld65 -C g2w_dpnowrap.cfg -o g2w_dpnowrap.bin g2w_dpnowrap.o

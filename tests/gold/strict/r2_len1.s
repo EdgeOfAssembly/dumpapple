@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/r2_len1.bin
+; dumpapple 0.10.0 listing of tests/progs/r2_len1.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o r2_len1.o r2_len1.s
 ;          ld65 -C r2_len1.cfg -o r2_len1.bin r2_len1.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: auto table $00200B: 1 entry used by $00200A (stopped: index guard)
 
 .setcpu "6502"

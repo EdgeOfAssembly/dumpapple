@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rts_word.bin
+; dumpapple 0.10.0 listing of tests/progs/rts_word.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rts_word.o rts_word.s
 ;          ld65 -C rts_word.cfg -o rts_word.bin rts_word.o

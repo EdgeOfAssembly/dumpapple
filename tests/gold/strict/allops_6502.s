@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/allops_6502.bin
+; dumpapple 0.10.0 listing of tests/progs/allops_6502.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o allops_6502.o allops_6502.s
 ;          ld65 -C allops_6502.cfg -o allops_6502.bin allops_6502.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 
@@ -10,455 +11,312 @@
 .segment "SEG1"
 .org $000200
 entry_000200:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $00,$12               ; 00/0200
+    .byte $00,$12               ; 00/0200: 00 12 brk $12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000202:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $01,$12               ; 00/0202
+    ora ($12,x)                 ; 00/0202: 01 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000204:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $05,$12               ; 00/0204
+    ora z:$12                   ; 00/0204: 05 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000206:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $06,$12               ; 00/0206
+    asl z:$12                   ; 00/0206: 06 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000208:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $08                   ; 00/0208
+    php                         ; 00/0208: 08 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000209:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $09,$12               ; 00/0209
+    ora #$12                    ; 00/0209: 09 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00020B:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $0A                   ; 00/020B
+    asl a                       ; 00/020B: 0A ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00020C:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $0D,$12,$34           ; 00/020C
+    ora a:$3412                 ; 00/020C: 0D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00020F:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $0E,$12,$34           ; 00/020F
+    asl a:$3412                 ; 00/020F: 0E 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000212:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $10,$00               ; 00/0212
+    bpl entry_000214            ; 00/0212: 10 00 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000214:
 ; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
     .byte $11,$12               ; 00/0214
 entry_000216:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $15,$12               ; 00/0216
+    ora z:$12,x                 ; 00/0216: 15 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000218:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $16,$12               ; 00/0218
+    asl z:$12,x                 ; 00/0218: 16 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00021A:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $18                   ; 00/021A
+    clc                         ; 00/021A: 18 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00021B:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $19,$12,$34           ; 00/021B
+    ora a:$3412,y               ; 00/021B: 19 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00021E:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $1D,$12,$34           ; 00/021E
+    ora a:$3412,x               ; 00/021E: 1D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000221:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $1E,$12,$34           ; 00/0221
+    asl a:$3412,x               ; 00/0221: 1E 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000224:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $20,$12,$34           ; 00/0224
+    jsr $3412                   ; 00/0224: 20 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000227:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $21,$12               ; 00/0227
+    and ($12,x)                 ; 00/0227: 21 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000229:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $24,$12               ; 00/0229
+    bit z:$12                   ; 00/0229: 24 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00022B:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $25,$12               ; 00/022B
+    and z:$12                   ; 00/022B: 25 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00022D:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $26,$12               ; 00/022D
+    rol z:$12                   ; 00/022D: 26 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00022F:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $28                   ; 00/022F
+    plp                         ; 00/022F: 28 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000230:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $29,$12               ; 00/0230
+    and #$12                    ; 00/0230: 29 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000232:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $2A                   ; 00/0232
+    rol a                       ; 00/0232: 2A ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000233:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $2C,$12,$34           ; 00/0233
+    bit a:$3412                 ; 00/0233: 2C 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000236:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $2D,$12,$34           ; 00/0236
+    and a:$3412                 ; 00/0236: 2D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000239:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $2E,$12,$34           ; 00/0239
+    rol a:$3412                 ; 00/0239: 2E 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00023C:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $30,$00               ; 00/023C
+    bmi entry_00023E            ; 00/023C: 30 00 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00023E:
 ; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
     .byte $31,$12               ; 00/023E
 entry_000240:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $35,$12               ; 00/0240
+    and z:$12,x                 ; 00/0240: 35 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000242:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $36,$12               ; 00/0242
+    rol z:$12,x                 ; 00/0242: 36 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000244:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $38                   ; 00/0244
+    sec                         ; 00/0244: 38 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000245:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $39,$12,$34           ; 00/0245
+    and a:$3412,y               ; 00/0245: 39 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000248:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $3D,$12,$34           ; 00/0248
+    and a:$3412,x               ; 00/0248: 3D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00024B:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $3E,$12,$34           ; 00/024B
+    rol a:$3412,x               ; 00/024B: 3E 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00024E:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $40                   ; 00/024E
+    rti                         ; 00/024E: 40 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00024F:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $41,$12               ; 00/024F
+    eor ($12,x)                 ; 00/024F: 41 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000251:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $45,$12               ; 00/0251
+    eor z:$12                   ; 00/0251: 45 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000253:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $46,$12               ; 00/0253
+    lsr z:$12                   ; 00/0253: 46 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000255:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $48                   ; 00/0255
+    pha                         ; 00/0255: 48 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000256:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $49,$12               ; 00/0256
+    eor #$12                    ; 00/0256: 49 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000258:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $4A                   ; 00/0258
+    lsr a                       ; 00/0258: 4A ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000259:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $4C,$12,$34           ; 00/0259
+    jmp $3412                   ; 00/0259: 4C 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00025C:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $4D,$12,$34           ; 00/025C
+    eor a:$3412                 ; 00/025C: 4D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00025F:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $4E,$12,$34           ; 00/025F
+    lsr a:$3412                 ; 00/025F: 4E 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000262:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $50,$00               ; 00/0262
+    bvc entry_000264            ; 00/0262: 50 00 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000264:
 ; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
     .byte $51,$12               ; 00/0264
 entry_000266:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $55,$12               ; 00/0266
+    eor z:$12,x                 ; 00/0266: 55 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000268:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $56,$12               ; 00/0268
+    lsr z:$12,x                 ; 00/0268: 56 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00026A:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $58                   ; 00/026A
+    cli                         ; 00/026A: 58 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00026B:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $59,$12,$34           ; 00/026B
+    eor a:$3412,y               ; 00/026B: 59 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00026E:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $5D,$12,$34           ; 00/026E
+    eor a:$3412,x               ; 00/026E: 5D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000271:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $5E,$12,$34           ; 00/0271
+    lsr a:$3412,x               ; 00/0271: 5E 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000274:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $60                   ; 00/0274
+    rts                         ; 00/0274: 60 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000275:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $61,$12               ; 00/0275
+    adc ($12,x)                 ; 00/0275: 61 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000277:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $65,$12               ; 00/0277
+    adc z:$12                   ; 00/0277: 65 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000279:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $66,$12               ; 00/0279
+    ror z:$12                   ; 00/0279: 66 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00027B:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $68                   ; 00/027B
+    pla                         ; 00/027B: 68 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00027C:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $69,$12               ; 00/027C
+    adc #$12                    ; 00/027C: 69 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00027E:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $6A                   ; 00/027E
+    ror a                       ; 00/027E: 6A ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00027F:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $6C,$12,$34           ; 00/027F
+    jmp ($3412)                 ; 00/027F: 6C 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000282:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $6D,$12,$34           ; 00/0282
+    adc a:$3412                 ; 00/0282: 6D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000285:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $6E,$12,$34           ; 00/0285
+    ror a:$3412                 ; 00/0285: 6E 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000288:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $70,$00               ; 00/0288
+    bvs entry_00028A            ; 00/0288: 70 00 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00028A:
 ; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
     .byte $71,$12               ; 00/028A
 entry_00028C:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $75,$12               ; 00/028C
+    adc z:$12,x                 ; 00/028C: 75 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00028E:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $76,$12               ; 00/028E
+    ror z:$12,x                 ; 00/028E: 76 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000290:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $78                   ; 00/0290
+    sei                         ; 00/0290: 78 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000291:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $79,$12,$34           ; 00/0291
+    adc a:$3412,y               ; 00/0291: 79 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000294:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $7D,$12,$34           ; 00/0294
+    adc a:$3412,x               ; 00/0294: 7D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000297:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $7E,$12,$34           ; 00/0297
+    ror a:$3412,x               ; 00/0297: 7E 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00029A:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $81,$12               ; 00/029A
+    sta ($12,x)                 ; 00/029A: 81 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00029C:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $84,$12               ; 00/029C
+    sty z:$12                   ; 00/029C: 84 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00029E:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $85,$12               ; 00/029E
+    sta z:$12                   ; 00/029E: 85 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002A0:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $86,$12               ; 00/02A0
+    stx z:$12                   ; 00/02A0: 86 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002A2:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $88                   ; 00/02A2
+    dey                         ; 00/02A2: 88 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002A3:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $8A                   ; 00/02A3
+    txa                         ; 00/02A3: 8A ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002A4:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $8C,$12,$34           ; 00/02A4
+    sty a:$3412                 ; 00/02A4: 8C 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002A7:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $8D,$12,$34           ; 00/02A7
+    sta a:$3412                 ; 00/02A7: 8D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002AA:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $8E,$12,$34           ; 00/02AA
+    stx a:$3412                 ; 00/02AA: 8E 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002AD:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $90,$00               ; 00/02AD
+    bcc entry_0002AF            ; 00/02AD: 90 00 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002AF:
 ; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
     .byte $91,$12               ; 00/02AF
 entry_0002B1:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $94,$12               ; 00/02B1
+    sty z:$12,x                 ; 00/02B1: 94 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002B3:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $95,$12               ; 00/02B3
+    sta z:$12,x                 ; 00/02B3: 95 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002B5:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $96,$12               ; 00/02B5
+    stx z:$12,y                 ; 00/02B5: 96 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002B7:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $98                   ; 00/02B7
+    tya                         ; 00/02B7: 98 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002B8:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $99,$12,$34           ; 00/02B8
+    sta a:$3412,y               ; 00/02B8: 99 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002BB:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $9A                   ; 00/02BB
+    txs                         ; 00/02BB: 9A ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002BC:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $9D,$12,$34           ; 00/02BC
+    sta a:$3412,x               ; 00/02BC: 9D 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002BF:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $A0,$12               ; 00/02BF
+    ldy #$12                    ; 00/02BF: A0 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002C1:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $A1,$12               ; 00/02C1
+    lda ($12,x)                 ; 00/02C1: A1 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002C3:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $A2,$12               ; 00/02C3
+    ldx #$12                    ; 00/02C3: A2 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002C5:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $A4,$12               ; 00/02C5
+    ldy z:$12                   ; 00/02C5: A4 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002C7:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $A5,$12               ; 00/02C7
+    lda z:$12                   ; 00/02C7: A5 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002C9:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $A6,$12               ; 00/02C9
+    ldx z:$12                   ; 00/02C9: A6 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002CB:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $A8                   ; 00/02CB
+    tay                         ; 00/02CB: A8 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002CC:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $A9,$12               ; 00/02CC
+    lda #$12                    ; 00/02CC: A9 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002CE:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $AA                   ; 00/02CE
+    tax                         ; 00/02CE: AA ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002CF:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $AC,$12,$34           ; 00/02CF
+    ldy a:$3412                 ; 00/02CF: AC 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002D2:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $AD,$12,$34           ; 00/02D2
+    lda a:$3412                 ; 00/02D2: AD 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002D5:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $AE,$12,$34           ; 00/02D5
+    ldx a:$3412                 ; 00/02D5: AE 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002D8:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $B0,$00               ; 00/02D8
+    bcs entry_0002DA            ; 00/02D8: B0 00 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002DA:
 ; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
     .byte $B1,$12               ; 00/02DA
 entry_0002DC:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $B4,$12               ; 00/02DC
+    ldy z:$12,x                 ; 00/02DC: B4 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002DE:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $B5,$12               ; 00/02DE
+    lda z:$12,x                 ; 00/02DE: B5 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002E0:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $B6,$12               ; 00/02E0
+    ldx z:$12,y                 ; 00/02E0: B6 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002E2:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $B8                   ; 00/02E2
+    clv                         ; 00/02E2: B8 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002E3:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $B9,$12,$34           ; 00/02E3
+    lda a:$3412,y               ; 00/02E3: B9 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002E6:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $BA                   ; 00/02E6
+    tsx                         ; 00/02E6: BA ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002E7:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $BC,$12,$34           ; 00/02E7
+    ldy a:$3412,x               ; 00/02E7: BC 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002EA:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $BD,$12,$34           ; 00/02EA
+    lda a:$3412,x               ; 00/02EA: BD 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002ED:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $BE,$12,$34           ; 00/02ED
+    ldx a:$3412,y               ; 00/02ED: BE 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002F0:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $C0,$12               ; 00/02F0
+    cpy #$12                    ; 00/02F0: C0 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002F2:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $C1,$12               ; 00/02F2
+    cmp ($12,x)                 ; 00/02F2: C1 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002F4:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $C4,$12               ; 00/02F4
+    cpy z:$12                   ; 00/02F4: C4 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002F6:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $C5,$12               ; 00/02F6
+    cmp z:$12                   ; 00/02F6: C5 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002F8:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $C6,$12               ; 00/02F8
+    dec z:$12                   ; 00/02F8: C6 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002FA:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $C8                   ; 00/02FA
+    iny                         ; 00/02FA: C8 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002FB:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $C9,$12               ; 00/02FB
+    cmp #$12                    ; 00/02FB: C9 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002FD:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $CA                   ; 00/02FD
+    dex                         ; 00/02FD: CA ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_0002FE:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $CC,$12,$34           ; 00/02FE
+    cpy a:$3412                 ; 00/02FE: CC 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000301:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $CD,$12,$34           ; 00/0301
+    cmp a:$3412                 ; 00/0301: CD 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000304:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $CE,$12,$34           ; 00/0304
+    dec a:$3412                 ; 00/0304: CE 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000307:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $D0,$00               ; 00/0307
+    bne entry_000309            ; 00/0307: D0 00 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000309:
 ; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
     .byte $D1,$12               ; 00/0309
 entry_00030B:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $D5,$12               ; 00/030B
+    cmp z:$12,x                 ; 00/030B: D5 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00030D:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $D6,$12               ; 00/030D
+    dec z:$12,x                 ; 00/030D: D6 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00030F:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $D8                   ; 00/030F
+    cld                         ; 00/030F: D8 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000310:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $D9,$12,$34           ; 00/0310
+    cmp a:$3412,y               ; 00/0310: D9 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000313:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $DD,$12,$34           ; 00/0313
+    cmp a:$3412,x               ; 00/0313: DD 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000316:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $DE,$12,$34           ; 00/0316
+    dec a:$3412,x               ; 00/0316: DE 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000319:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $E0,$12               ; 00/0319
+    cpx #$12                    ; 00/0319: E0 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00031B:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $E1,$12               ; 00/031B
+    sbc ($12,x)                 ; 00/031B: E1 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00031D:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $E4,$12               ; 00/031D
+    cpx z:$12                   ; 00/031D: E4 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00031F:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $E5,$12               ; 00/031F
+    sbc z:$12                   ; 00/031F: E5 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000321:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $E6,$12               ; 00/0321
+    inc z:$12                   ; 00/0321: E6 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000323:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $E8                   ; 00/0323
+    inx                         ; 00/0323: E8 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000324:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $E9,$12               ; 00/0324
+    sbc #$12                    ; 00/0324: E9 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000326:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $EA                   ; 00/0326
+    nop                         ; 00/0326: EA ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000327:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $EC,$12,$34           ; 00/0327
+    cpx a:$3412                 ; 00/0327: EC 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00032A:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $ED,$12,$34           ; 00/032A
+    sbc a:$3412                 ; 00/032A: ED 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00032D:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $EE,$12,$34           ; 00/032D
+    inc a:$3412                 ; 00/032D: EE 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000330:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $F0,$00               ; 00/0330
+    beq entry_000332            ; 00/0330: F0 00 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000332:
 ; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
     .byte $F1,$12               ; 00/0332
 entry_000334:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $F5,$12               ; 00/0334
+    sbc z:$12,x                 ; 00/0334: F5 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000336:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $F6,$12               ; 00/0336
+    inc z:$12,x                 ; 00/0336: F6 12 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000338:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $F8                   ; 00/0338
+    sed                         ; 00/0338: F8 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_000339:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $F9,$12,$34           ; 00/0339
+    sbc a:$3412,y               ; 00/0339: F9 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00033C:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $FD,$12,$34           ; 00/033C
+    sbc a:$3412,x               ; 00/033C: FD 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ
 entry_00033F:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $FE,$12,$34           ; 00/033F
+    inc a:$3412,x               ; 00/033F: FE 12 34 ; decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ

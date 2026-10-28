@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/t5_6502push.bin
+; dumpapple 0.10.0 listing of tests/progs/t5_6502push.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o t5_6502push.o t5_6502push.s
 ;          ld65 -C t5_6502push.cfg -o t5_6502push.bin t5_6502push.o

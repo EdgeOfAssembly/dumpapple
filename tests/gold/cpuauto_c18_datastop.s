@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c18_datastop.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c18_datastop.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_c18_datastop.o cpuauto_c18_datastop.s
 ;          ld65 -C cpuauto_c18_datastop.cfg -o cpuauto_c18_datastop.bin cpuauto_c18_datastop.o

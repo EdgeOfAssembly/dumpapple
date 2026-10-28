@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/x10_emurep.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/x10_emurep.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_x10_emurep.o cpuauto_x10_emurep.s
 ;          ld65 -C cpuauto_x10_emurep.cfg -o cpuauto_x10_emurep.bin cpuauto_x10_emurep.o

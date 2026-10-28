@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/rsplit.omf
+; dumpapple 0.10.0 listing of tests/progs/rsplit.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o rsplit_omf.o rsplit_omf.s
 ;          ld65 -C rsplit_omf.cfg -o rsplit_omf.bin rsplit_omf.o
 ; input: OMF v2 load file; output is the relocated loaded image, segments in file order
+; note: --strict-smc: seed targets are off (--seed-targets turns them back on)
 
 .setcpu "65816"
 

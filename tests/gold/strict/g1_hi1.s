@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_hi1.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_hi1.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_hi1.o g1_hi1.s
 ;          ld65 -C g1_hi1.cfg -o g1_hi1.bin g1_hi1.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: length-prefixed helper $00200E: high-byte add adds 1 page(s); inline length not applied
 
 .setcpu "6502"

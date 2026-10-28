@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/src/hint_h05_hint_in_callee.bin
+; dumpapple 0.10.0 listing of tests/src/hint_h05_hint_in_callee.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o hint_h05_hint_in_callee.o hint_h05_hint_in_callee.s
 ;          ld65 -C hint_h05_hint_in_callee.cfg -o hint_h05_hint_in_callee.bin hint_h05_hint_in_callee.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65C02"
 

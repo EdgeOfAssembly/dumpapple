@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/r88.bin
+; dumpapple 0.10.0 listing of tests/progs/r88.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o r88.o r88.s
 ;          ld65 -C r88.cfg -o r88.bin r88.o

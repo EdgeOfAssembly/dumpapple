@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_var.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_var.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rules_var.o rules_var.s
 ;          ld65 -C rules_var.cfg -o rules_var.bin rules_var.o

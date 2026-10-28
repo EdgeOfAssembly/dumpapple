@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/brk1.bin
+; dumpapple 0.10.0 listing of tests/progs/brk1.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o brk1.o brk1.s
 ;          ld65 -C brk1.cfg -o brk1.bin brk1.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: single-byte BRK at $002002: flow continues at $002003
 
 .setcpu "6502"

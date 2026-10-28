@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/gsos_inline.bin
+; dumpapple 0.10.0 listing of tests/progs/gsos_inline.bin
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o gsos_inline.o gsos_inline.s
 ;          ld65 -C gsos_inline.cfg -o gsos_inline.bin gsos_inline.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65816"
 

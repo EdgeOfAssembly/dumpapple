@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_noret.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_noret.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rules_noret.o rules_noret.s
 ;          ld65 -C rules_noret.cfg -o rules_noret.bin rules_noret.o

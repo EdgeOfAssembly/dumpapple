@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/r02.bin
+; dumpapple 0.10.0 listing of tests/progs/r02.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o r02.o r02.s
 ;          ld65 -C r02.cfg -o r02.bin r02.o

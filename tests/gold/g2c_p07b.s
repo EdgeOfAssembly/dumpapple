@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2c_p07b.bin
+; dumpapple 0.10.0 listing of tests/progs/g2c_p07b.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2c_p07b.o g2c_p07b.s
 ;          ld65 -C g2c_p07b.cfg -o g2c_p07b.bin g2c_p07b.o

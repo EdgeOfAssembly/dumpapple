@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/dataseg.omf
+; dumpapple 0.10.0 listing of tests/progs/dataseg.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o dataseg_omf.o dataseg_omf.s
 ;          ld65 -C dataseg_omf.cfg -o dataseg_omf.bin dataseg_omf.o
 ; input: OMF v2 load file; output is the relocated loaded image, segments in file order
+; note: --strict-smc: seed targets are off (--seed-targets turns them back on)
 
 .setcpu "65816"
 

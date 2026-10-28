@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_gs0ffe.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_gs0ffe.bin
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o g2w_gs0ffe.o g2w_gs0ffe.s
 ;          ld65 -C g2w_gs0ffe.cfg -o g2w_gs0ffe.bin g2w_gs0ffe.o

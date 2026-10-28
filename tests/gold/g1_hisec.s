@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_hisec.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_hisec.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_hisec.o g1_hisec.s
 ;          ld65 -C g1_hisec.cfg -o g1_hisec.bin g1_hisec.o

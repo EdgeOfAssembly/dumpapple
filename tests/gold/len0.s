@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/len0.bin
+; dumpapple 0.10.0 listing of tests/progs/len0.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o len0.o len0.s
 ;          ld65 -C len0.cfg -o len0.bin len0.o

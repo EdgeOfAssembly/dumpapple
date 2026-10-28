@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/noret_ff69.bin
+; dumpapple 0.10.0 listing of tests/progs/noret_ff69.bin
 ; cpu 65c02, platform prodos8
 ; rebuild: ca65 --cpu 65C02 -t none -o noret_ff69.o noret_ff69.s
 ;          ld65 -C noret_ff69.cfg -o noret_ff69.bin noret_ff69.o

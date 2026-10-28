@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rts_split.bin
+; dumpapple 0.10.0 listing of tests/progs/rts_split.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o rts_split_hint.o rts_split_hint.s
 ;          ld65 -C rts_split_hint.cfg -o rts_split_hint.bin rts_split_hint.o

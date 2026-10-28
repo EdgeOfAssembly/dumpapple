@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2s_816.bin
+; dumpapple 0.10.0 listing of tests/progs/g2s_816.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2s_816.o g2s_816.s
 ;          ld65 -C g2s_816.cfg -o g2s_816.bin g2s_816.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $002003: COUT $FDED goes through CSW ($36/$37), which the image may change (decoding stopped at $2188 (accumulator width unknown (M flag conflict)), code there not checked); bytes after the call left undecoded
 
 .setcpu "65816"

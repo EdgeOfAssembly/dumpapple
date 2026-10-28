@@ -1,3 +1,4 @@
+#include <set>
 #include <functional>
 // dumpapple - game-agnostic Apple II / IIgs (6502, 65C02, 65816) disassembler producing
 // ca65 listings that rebuild byte-identical.
@@ -67,8 +68,15 @@ static void usage(FILE *f) {
 "  --no-auto-inline    do not detect routines that read a terminated string\n"
 "                      after the call\n"
 "  --no-imm-pointers   do not treat lda #<x / ldx #>x pairs as code pointers\n"
+"  --no-seed-targets   do not seed in-image jsr/jmp targets when flow leaves\n"
+"                      the image (default: seeded, each noted; off under\n"
+"                      --strict-smc unless --seed-targets)\n"
+"  --no-auto-region    raw: do not turn a recognized copy-then-jump (monitor\n"
+"                      MOVE, page copy) into a region (default: auto; off\n"
+"                      under --strict-smc unless --auto-region)\n"
 "  --strict-smc        stores with unknown targets may modify code (stop\n"
-"                      decoding there; CPU auto-detect ignores it)\n"
+"                      decoding there; the entry run before the first store\n"
+"                      stays code; CPU auto-detect ignores it)\n"
 "  --state S           entry width state: e | m8x8 | m8x16 | m16x8 | m16x16\n"
 "                      (default: raw e, OMF m16x16)\n"
 "  --no-org-entry      raw: do not treat --org as an entry point\n"
@@ -117,7 +125,8 @@ int main(int argc, char **argv) {
     std::vector<std::string> hintsPaths;
     std::string in, out, cfgPath, dumpImage, ca65 = "ca65", ld65 = "ld65";
     bool forceOmf = false, forceRaw = false, verify = false, quiet = false, segEntries = false, haveState = false, defaultEntry = true, haveCpu = false, followTables = true;
-    bool autoInline = true, immPointers = true, strictSmc = false;
+    bool autoInline = true, immPointers = true, strictSmc = false, seedTargets = true, autoRegion = true;
+    int seedSet = -1, regionSet = -1;      // explicit --[no-]seed-targets / --[no-]auto-region (-1: default)
     Cpu cpu = Cpu::C65816;
     std::string platformArg;
     uint32_t org = 0x2000;
@@ -151,6 +160,10 @@ int main(int argc, char **argv) {
         else if (a == "--no-auto-inline") autoInline = false;
         else if (a == "--no-imm-pointers") immPointers = false;
         else if (a == "--strict-smc") strictSmc = true;
+        else if (a == "--no-seed-targets") seedSet = 0;
+        else if (a == "--seed-targets") seedSet = 1;
+        else if (a == "--no-auto-region") regionSet = 0;
+        else if (a == "--auto-region") regionSet = 1;
         else if (a == "--no-tables") followTables = false;
         else if (a == "--platform") { platformArg = need("--platform"); if (platformArg != "none" && platformArg != "prodos8" && platformArg != "gsos") { fprintf(stderr, "dumpapple: bad --platform %s (none, prodos8, gsos)\n", platformArg.c_str()); return 2; } }
         else if (a == "--cpu") { std::string c = need("--cpu"); if (!parseCpu(c, cpu)) { fprintf(stderr, "dumpapple: bad --cpu %s (6502, 65c02, 65816)\n", c.c_str()); return 2; } haveCpu = true; }
@@ -192,8 +205,16 @@ int main(int argc, char **argv) {
     for (auto &hp : hintsPaths)
         if (!readHintsFile(hp, raw, err)) { fprintf(stderr, "dumpapple: %s\n", err.c_str()); return 1; }
     if (!hintsSegBase(raw, oo.segBase, err)) { fprintf(stderr, "dumpapple: %s\n", err.c_str()); return 1; }
+    // --strict-smc proves, it does not guess: seeded entries and auto regions (heuristics whose
+    // stores would then count against the entry code) are off unless asked for
+    seedTargets = seedSet >= 0 ? seedSet == 1 : !strictSmc;
+    autoRegion = regionSet >= 0 ? regionSet == 1 : !strictSmc;
+    std::vector<Hints::Region> autoRegions; std::vector<std::string> autoNotes; std::set<uint32_t> autoCopyStores; bool autoTried = false;
+rebuild:     // a second pass when copy-then-jump regions were recognized (auto region)
     std::vector<Hints::Region> regions;
     if (!hintsRegions(raw, regions, err)) { fprintf(stderr, "dumpapple: %s\n", err.c_str()); return 1; }
+    const bool hintRegions = !regions.empty();
+    regions.insert(regions.end(), autoRegions.begin(), autoRegions.end());
     Image img;
     bool omf = forceOmf || (!forceRaw && looksLikeOmf(file));
     if (omf) {
@@ -245,6 +266,8 @@ int main(int argc, char **argv) {
     ao.autoInline = autoInline;
     ao.immPointers = immPointers;
     ao.strictSmc = strictSmc;
+    ao.seedTargets = seedTargets;
+    ao.copyStores = autoCopyStores;
     if (platformArg.empty()) platformArg = omf ? "gsos" : "none";
     if (platformArg == "gsos" && cpu != Cpu::C65816 && !quiet)
         fprintf(stderr, "dumpapple: warning: --platform gsos with --cpu %s (GS/OS calls are 65816 JSL; the rule cannot fire)\n", cpuName(cpu));
@@ -259,6 +282,7 @@ int main(int argc, char **argv) {
         }
         if (!parseAddr(as, img, ep.addr)) { fprintf(stderr, "dumpapple: bad --entry %s\n", e.c_str()); return 2; }
         ao.entries.push_back(ep);
+        ao.userEntries.insert(ep.addr);
     }
     if (omf) {
         bool first = true;
@@ -563,6 +587,18 @@ int main(int argc, char **argv) {
     if (!dec.ok()) { fprintf(stderr, "dumpapple: Capstone 65816 support unavailable\n"); return 1; }
     Analysis an;
     analyze(img, h, ao, dec, an);
+    if (autoRegion && !omf && !hintRegions && !autoTried) {
+        autoTried = true;
+        autoRegions = detectMoves(img, an, org, autoNotes, autoCopyStores);
+        if (!autoRegions.empty()) goto rebuild;
+    }
+    for (auto &n : autoNotes) an.notes.insert(an.notes.begin(), n);
+    bool seedOff = seedSet < 0, regOff = regionSet < 0 && !omf;    // auto regions apply to raw input only
+    if (strictSmc && (seedOff || regOff)) {
+        std::string what = seedOff && regOff ? "seed targets and auto regions are" : seedOff ? "seed targets are" : "auto regions are";
+        std::string how = seedOff && regOff ? "--seed-targets / --auto-region turn them" : seedOff ? "--seed-targets turns them" : "--auto-region turns them";
+        an.notes.insert(an.notes.begin(), "--strict-smc: " + what + " off (" + how + " back on)");
+    }
     if (!dumpImage.empty()) {
         auto f = img.flat();
         if (!writeFile(dumpImage, std::string(f.begin(), f.end()))) { fprintf(stderr, "dumpapple: cannot write %s\n", dumpImage.c_str()); return 1; }

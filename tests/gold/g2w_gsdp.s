@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_gsdp.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_gsdp.bin
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o g2w_gsdp.o g2w_gsdp.s
 ;          ld65 -C g2w_gsdp.cfg -o g2w_gsdp.bin g2w_gsdp.o

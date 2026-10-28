@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/t03.bin
+; dumpapple 0.10.0 listing of tests/progs/t03.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o t03.o t03.s
 ;          ld65 -C t03.cfg -o t03.bin t03.o

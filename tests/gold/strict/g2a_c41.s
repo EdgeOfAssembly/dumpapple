@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2a_c41.bin
+; dumpapple 0.10.0 listing of tests/progs/g2a_c41.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2a_c41.o g2a_c41.s
 ;          ld65 -C g2a_c41.cfg -o g2a_c41.bin g2a_c41.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $002013: COUT $FDED goes through CSW ($36/$37), which the image may change (store that may reach CSW at $200C); bytes after the call left undecoded
 
 .setcpu "6502"

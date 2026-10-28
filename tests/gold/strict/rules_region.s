@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_region.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_region.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rules_region.o rules_region.s
 ;          ld65 -C rules_region.cfg -o rules_region.bin rules_region.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 
@@ -23,5 +24,6 @@ L002002:
 .segment "SEG2"
 .org $000280
 L000280:
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $A9,$C1,$20,$ED,$FD,$4C,$80,$02 ; 00/0280
+    lda #$C1                    ; 00/0280: A9 C1
+    jsr $FDED                   ; 00/0282: 20 ED FD
+    jmp .loword(L000280)        ; 00/0285: 4C 80 02

@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/g2b_n22.bin
+; dumpapple 0.10.0 listing of tests/progs/g2b_n22.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2b_n22.o g2b_n22.s
 ;          ld65 -C g2b_n22.cfg -o g2b_n22.bin g2b_n22.o
 ; assumes decimal mode clear at entry (an inline-string helper adds/subtracts; no cld/sed on the way to its call)
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

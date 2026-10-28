@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c26_longsta.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c26_longsta.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c26_longsta.o cpuauto_c26_longsta.s
 ;          ld65 -C cpuauto_c26_longsta.cfg -o cpuauto_c26_longsta.bin cpuauto_c26_longsta.o

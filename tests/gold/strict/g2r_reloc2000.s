@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2r_reloc.bin
+; dumpapple 0.10.0 listing of tests/progs/g2r_reloc.bin
 ; cpu 6502, platform prodos8
 ; rebuild: ca65 --cpu 6502 -t none -o g2r_reloc2000.o g2r_reloc2000.s
 ;          ld65 -C g2r_reloc2000.cfg -o g2r_reloc2000.bin g2r_reloc2000.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: relocation loop at $2012 copies 2 page(s) from $2000 to $1000 and continues in the copy; the code is meant to run at $1000 (try --org 1000)
 
 .setcpu "6502"

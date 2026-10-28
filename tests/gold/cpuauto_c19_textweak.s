@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c19_textweak.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c19_textweak.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_c19_textweak.o cpuauto_c19_textweak.s
 ;          ld65 -C cpuauto_c19_textweak.cfg -o cpuauto_c19_textweak.bin cpuauto_c19_textweak.o

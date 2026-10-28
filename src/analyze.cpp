@@ -1,4 +1,5 @@
 // Recursive-descent control-flow analysis with M/X/E width tracking.
+#include <functional>
 #include "analyze.h"
 #include <cstdio>
 #include <cstdarg>
@@ -846,8 +847,15 @@ static bool analyzeOnce(const Image &img, const Hints &h, const AnalyzeOptions &
         if (w816 && (op == 0x82 || op == 0x5C || op == 0x22 || op == 0xFC || op == 0xDC || op == 0x62 || op == 0xC2 || op == 0xE2 || op == 0xF4 || op == 0xD4)) return true;
         return false;
     };
+    std::set<uint32_t> prefixSet;   // --strict-smc: straight-line run from a load entry (not --entry, not seeded)
+    auto isPrefix = [&](uint32_t x) {
+        if (out.prefixBadIn.count(x)) return false;
+        if (prefixSet.count(x)) return true;
+        auto l = out.labels.find(x);
+        return l != out.labels.end() && (l->second & LK_ENTRY) && !out.seedEntries.count(x);
+    };
     auto sameInsn = [](const Insn &x, const Insn &y) { return x.len == y.len && !memcmp(x.b, y.b, x.len); };
-    auto patchVariants = [&](uint32_t a, const uint8_t *p, size_t avail, const State &st, const Insn &orig, std::vector<Insn> &vars, bool &unkOpnd, int &wide, std::string &sw) -> bool {
+    auto patchVariants = [&](uint32_t a, const uint8_t *p, size_t avail, const State &st, const Insn &orig, std::vector<Insn> &vars, bool &unkOpnd, int &wide, bool &ctlUnk, std::string &sw) -> bool {
         size_t nb = std::min<size_t>(avail, 4);
         PB pb[4]; bool hit[4] = {false, false, false, false}, any = false;
         for (size_t q = 0; q < nb; q++) { hit[q] = pbAt((a & 0xFF0000) | ((a + q) & 0xFFFF), pb[q]); any = any || hit[q]; }
@@ -879,6 +887,7 @@ static bool analyzeOnce(const Image &img, const Hints &h, const AnalyzeOptions &
             std::vector<std::vector<int>> oo(t.len); curOp = c0;
             for (int q = 1; q < t.len; q++)
                 if (!opts(q, oo[q])) {
+                    if ((c0 == 0x20 || c0 == 0x4C) && t.len == 3) { ctlUnk = true; continue; }   // patched jsr/jmp target: emitted, target unknown
                     if (sensitive((uint8_t)c0)) { sw = "operand may be changed by a store to an unknown value or to one of several values (self-modifying code)"; return false; }
                     unkOpnd = true;
                 }
@@ -941,10 +950,20 @@ static bool analyzeOnce(const Image &img, const Hints &h, const AnalyzeOptions &
         out.bad.erase(a);
         decoded[a] = CodeInsn{ins, st};
         std::vector<Insn> vars{ins};
-        bool unkOpnd = false; int wide = 0;    // wide: 1 opcode, 2 operand reached by a wide-range store
+        bool unkOpnd = false, ctlUnk = false; int wide = 0;    // wide: 1 opcode, 2 operand reached by a wide-range store
         if (!patched.empty() || !mods.empty()) {
             std::string sw;
-            if (!patchVariants(a, p, avail, st, ins, vars, unkOpnd, wide, sw)) { decoded.erase(a); out.bad[a] = sw; continue; }
+            if (!patchVariants(a, p, avail, st, ins, vars, unkOpnd, wide, ctlUnk, sw)) {
+                bool pre = o.strictSmc && isPrefix(a);
+                if (!o.userEntries.count(a) && !pre) { decoded.erase(a); out.bad[a] = sw; continue; }
+                // --entry always wins, and under --strict-smc the straight run from a load entry executes
+                // before any store: the on-disk bytes are decoded; nothing they leave is trusted
+                vars.assign(1, ins); unkOpnd = true; ctlUnk = false; wide = 0;
+                out.variants.erase(a);
+                if (o.userEntries.count(a)) { out.patchNote[a] = "decoded as on disk (--entry); " + sw; out.entryWin.insert(a); }
+                else { out.patchNote[a] = "decoded as on disk: runs from the entry before any store (--strict-smc); later runs may differ"; out.prefixWin.insert(a); }
+                goto forms;
+            }
             if (vars.size() != 1 || !sameInsn(vars[0], ins)) {
                 std::vector<CodeInsn> cv; std::string pn;
                 bool encRuns = sameInsn(vars[0], ins);
@@ -959,6 +978,18 @@ static bool analyzeOnce(const Image &img, const Hints &h, const AnalyzeOptions &
                 if (!encRuns) for (uint32_t q = 0; q < ins.len; q++) if (out.hintDomIn.count(a + q)) perHint = true;
                 out.patchNote[a] = std::string(encRuns ? "may also run as " : "changed by a store before it runs: runs as ") + pn + (perHint ? " (per noreturn hint)" : "") + " (self-modifying code)";
             } else { out.variants.erase(a); out.patchNote.erase(a); }
+        }
+        forms:
+        if (o.strictSmc && isPrefix(a)) {      // the run before the first store, call, branch or join stays on-disk code
+            out.prefixRun.insert(a);
+            bool ends = out.prefixJoinIn.count(a) > 0;    // re-entered: later runs pass on from here after stores
+            static const char *safe[] = {"lda","ldx","ldy","tax","tay","txa","tya","tsx","txs","clc","sec","cli","sei","cld","sed","clv",
+                "inx","iny","dex","dey","cmp","cpx","cpy","and","ora","eor","adc","sbc","bit","nop","pha","php","pla","plp","xce","rep","sep"};
+            std::string m = ins.mnemonic.substr(0, 3); for (auto &ch : m) ch = (char)tolower((unsigned char)ch);
+            bool ok = false; for (auto *k : safe) if (m == k) ok = true;
+            if (ends) ;
+            else if (ins.b[0] == 0x4C && ins.len == 3) prefixSet.insert((a & 0xFF0000) | ins.b[1] | ins.b[2] << 8);
+            else if (ok) prefixSet.insert(a + ins.len);
         }
         for (size_t vi = 0; vi < vars.size(); vi++) {
         const Insn ins = vars[vi];
@@ -1237,9 +1268,13 @@ static bool analyzeOnce(const Image &img, const Hints &h, const AnalyzeOptions &
         case 0x80: label(rel(d8), LK_CODE); flow(rel(d8), ns); break;            // BRA
         case 0x82: label(rel(d16), LK_CODE); flow(rel(d16), ns); break;          // BRL
         case 0x62: label(rel(d16), LK_DATA); flow(next, ns); break;              // PER
-        case 0x4C: label(abs16, LK_CODE); flow(abs16, ns); break;                // JMP abs
+        case 0x4C:                                                               // JMP abs
+            if (ctlUnk) { out.indSites.insert(a); out.dispatch[a] = "unknown: jmp target may be modified by a store (self-modifying code)"; break; }
+            label(abs16, LK_CODE); flow(abs16, ns); break;
         case 0x5C: label(abs24, LK_CODE); flow(abs24, ns); break;                // JML long
-        case 0x20: call(abs16); break;                                           // JSR abs
+        case 0x20:                                                               // JSR abs
+            if (ctlUnk) { out.indSites.insert(a); out.patchNote[a] = "call target may be modified by a store (self-modifying code); return path followed"; State b = ns; b.c = -1; flow(next, b); break; }
+            call(abs16); break;
         case 0x22: call(abs24); break;                                           // JSL
         case 0xFC: { out.indSites.insert(a); State b = ns; b.c = -1; flow(next, b); break; }            // JSR (abs,x)
         case 0x60: case 0x6B: pushDispatch(); break;                             // RTS RTL
@@ -1339,12 +1374,101 @@ static bool analyzeOnce(const Image &img, const Hints &h, const AnalyzeOptions &
     for (auto &ht : h.tables) { hinted.insert(ht.addr); if (ht.kind == TK_SPLIT) hinted.insert(ht.hiAddr); }    // keep the heuristic off hinted addresses
     applyHints(false);
     run();
+    // ---- constant indirect targets: jmp (abs) whose two pointer bytes hold one known value on every
+    // path into it (6502/65C02).  Backward dataflow over decoded predecessors: lda/ldx/ldy #imm,
+    // transfers, inx/dex/iny/dey and plain stores; anything else that may write a register or the
+    // pointer makes it unknown, as do calls, joins that disagree, loops and entries of unknown origin.
+    auto constPtr = [&](uint32_t S, uint32_t &tgt) -> bool {
+        if (w816) return false;
+        auto si = decoded.find(S);
+        if (si == decoded.end() || si->second.in.b[0] != 0x6C || out.variants.count(S) || patched.count(S + 1) || patched.count(S + 2)) return false;
+        uint32_t P0 = si->second.in.b[1] | (si->second.in.b[2] << 8);
+        uint32_t P1 = dec.cpu() == Cpu::C6502 ? ((P0 & 0xFF00) | ((P0 + 1) & 0xFF)) : ((P0 + 1) & 0xFFFF);
+        if ((P0 >> 8) == 1 || (P1 >> 8) == 1) return false;       // page 1: pushes and calls write it
+        struct V { int r[5]; bool operator==(const V &o) const { return !memcmp(r, o.r, sizeof r); } };   // A X Y [P0] [P1]
+        V unkV; for (int &x : unkV.r) x = -1;
+        int budget = 400; std::set<uint32_t> stack;
+        auto isTerm = [&](uint8_t op) { return op == 0x4C || op == 0x6C || op == 0x60 || op == 0x40 || op == 0x00 || (op == 0x80 && dec.cpu() != Cpu::C6502); };
+        auto apply = [&](const CodeInsn &c, V v, bool fall) -> V {
+            const uint8_t *b = c.in.b; uint8_t op = b[0];
+            if (out.variants.count(c.in.addr)) return unkV;
+            for (int q = 1; q < c.in.len; q++) if (patched.count(c.in.addr + q)) return unkV;
+            if (op == 0x20) return fall ? unkV : v;                // a call: the callee is not followed
+            if ((op & 0x1F) == 0x10 || op == 0x4C || op == 0x80) return v;
+            auto st = [&](uint32_t ad, int val) { if (ad == P0) v.r[3] = val; if (ad == P1) v.r[4] = val; };
+            auto bump = [&](int i, int d) { if (v.r[i] >= 0) v.r[i] = (v.r[i] + d) & 0xFF; };
+            uint32_t z = b[1], ab = b[1] | (b[2] << 8);
+            switch (op) {
+            case 0xA9: v.r[0] = b[1]; break; case 0xA2: v.r[1] = b[1]; break; case 0xA0: v.r[2] = b[1]; break;
+            case 0xAA: v.r[1] = v.r[0]; break; case 0xA8: v.r[2] = v.r[0]; break; case 0x8A: v.r[0] = v.r[1]; break; case 0x98: v.r[0] = v.r[2]; break;
+            case 0xE8: bump(1, 1); break; case 0xCA: bump(1, -1); break; case 0xC8: bump(2, 1); break; case 0x88: bump(2, -1); break;
+            case 0x85: st(z, v.r[0]); break; case 0x86: st(z, v.r[1]); break; case 0x84: st(z, v.r[2]); break;
+            case 0x8D: st(ab, v.r[0]); break; case 0x8E: st(ab, v.r[1]); break; case 0x8C: st(ab, v.r[2]); break;
+            case 0x64: if (dec.cpu() == Cpu::C6502) return unkV; st(z, 0); break;
+            case 0x9C: if (dec.cpu() == Cpu::C6502) return unkV; st(ab, 0); break;
+            case 0x18: case 0x38: case 0x58: case 0x78: case 0xD8: case 0xF8: case 0xB8: case 0xEA: case 0x48: case 0x08:
+            case 0xC9: case 0xC5: case 0xCD: case 0xD5: case 0xDD: case 0xD9: case 0xC1: case 0xD1:
+            case 0xE0: case 0xE4: case 0xEC: case 0xC0: case 0xC4: case 0xCC: case 0x24: case 0x2C: break;
+            case 0xE6: case 0xC6: case 0x06: case 0x46: case 0x26: case 0x66: st(z, -1); break;     // read-modify-write zp
+            case 0xEE: case 0xCE: case 0x0E: case 0x4E: case 0x2E: case 0x6E: st(ab, -1); break;
+            default: {
+                // indexed/indirect stores and every other register write: unknown
+                bool store = op == 0x95 || op == 0x94 || op == 0x96 || op == 0x9D || op == 0x99 || op == 0x91 || op == 0x81 ||
+                             op == 0xF6 || op == 0xD6 || op == 0x16 || op == 0x56 || op == 0x36 || op == 0x76 ||
+                             op == 0xFE || op == 0xDE || op == 0x1E || op == 0x5E || op == 0x3E || op == 0x7E;
+                if (dec.cpu() != Cpu::C6502) store = true;          // 65C02: stz/tsb/trb/rmb/smb/(zp) forms, kept simple
+                if (store) return unkV;
+                v.r[0] = v.r[1] = v.r[2] = -1;
+            }
+            }
+            return v;
+        };
+        std::function<V(uint32_t)> before = [&](uint32_t pos) -> V {
+            if (--budget < 0 || stack.count(pos)) return unkV;
+            stack.insert(pos);
+            std::vector<std::pair<const CodeInsn *, bool>> ps;     // predecessor, reached by falling through it
+            bool bad = false;
+            if (auto cs = out.ctlSrc.find(pos); cs != out.ctlSrc.end())
+                for (uint32_t q : cs->second) { auto d = decoded.find(q); if (q == ~0u || d == decoded.end()) bad = true; else ps.push_back({&d->second, false}); }
+            if (const CodeInsn *f = pred(pos); f && !isTerm(f->in.b[0])) {
+                bool taken = (f->in.b[0] & 0x1F) == 0x10 && brKnown(f->in, f->st) == 1;
+                if (!taken) ps.push_back({f, true});
+            }
+            V r = unkV;
+            if (!bad && !ps.empty()) {
+                bool first = true;
+                for (auto &pq : ps) {
+                    V w = apply(*pq.first, before(pq.first->in.addr), pq.second);
+                    if (first) { r = w; first = false; }
+                    else for (int i = 0; i < 5; i++) if (r.r[i] != w.r[i]) r.r[i] = -1;
+                }
+            }
+            stack.erase(pos);
+            return r;
+        };
+        V v = before(S);
+        if (budget < 0 || v.r[3] < 0 || v.r[4] < 0) return false;
+        tgt = (S & 0xFF0000) | (uint32_t)(v.r[3] | (v.r[4] << 8));
+        return true;
+    };
+    bool seedDone = false;
     for (int round = 0; round < 64; round++) {
         size_t before = out.tables.size(), candsBefore = rtsCands.size();
         applyHints(false);
         // lda #<x / ldx|ldy #>x (either order): x is code if it decodes cleanly to a
         // terminator; text and zero runs, data and mid-instruction targets are skipped
         size_t immAdded = 0;
+        for (uint32_t S : std::set<uint32_t>(out.indSites)) {
+            if (out.constInd.count(S)) continue;
+            uint32_t t;
+            if (!constPtr(S, t)) continue;
+            out.constInd[S] = t;
+            out.dispatch[S] = "constant pointer: target " + hex6(t);
+            curSrc = S; label(t, LK_CODE); curSrc = ~0u;
+            auto si = decoded.find(S);
+            if (si != decoded.end()) flow(t, step(si->second.in, si->second.st));
+            immAdded++;
+        }
         if (o.immPointers) {
             auto isText = [](uint8_t b) { return (b >= 0x20 && b <= 0x7E) || (b >= 0xA0 && b <= 0xFE); };
             auto probe = [&](uint32_t x, State st) {
@@ -1424,6 +1548,70 @@ static bool analyzeOnce(const Image &img, const Hints &h, const AnalyzeOptions &
                 label(c.first, LK_CODE);
                 flow(c.first, c.second);
                 immAdded++;
+            }
+        }
+        // flow left the image (jmp abs to RAM outside it): seed in-image absolute jsr/jmp targets read
+        // from undecoded bytes, once.  A target must start after a terminator, not be a fill (8 equal
+        // bytes) or high-bit text, and decode cleanly to a terminator or known code.
+        if (o.seedTargets && !seedDone) {
+            uint32_t leftAt = ~0u;
+            for (auto &kv : decoded) {
+                const Insn &q = kv.second.in;
+                if (q.b[0] != 0x4C) continue;
+                uint32_t t = (kv.first & 0xFF0000) | (uint32_t)(q.b[1] | (q.b[2] << 8));
+                if (!am.contains(t) && (t & 0xFFFF) < 0xC000) { leftAt = kv.first; break; }
+            }
+            if (leftAt != ~0u) {
+                seedDone = true;
+                auto probe2 = [&](uint32_t x, State st) {
+                    for (int k = 0; k < 64; k++) {
+                        if (decoded.count(x)) return true;
+                        if (codeAt(x, 1) || inData(dataR, x, 1)) return false;
+                        size_t av; const uint8_t *p = am.at(x, av);
+                        if (!p) return false;
+                        Insn in; std::string why;
+                        if (!dec.decode(p, std::min<size_t>(av, 0x10000 - (x & 0xFFFF)), x, st.m, st.x, in, why)) return false;
+                        if (inData(dataR, x, in.len) || codeAt(x + 1, in.len - 1)) return false;
+                        uint8_t op = in.b[0];
+                        if (op == 0x00 || op == 0x02 || op == 0xDB || op == 0x42) return false;
+                        if (op == 0x60 || op == 0x6B || op == 0x40 || op == 0x4C || op == 0x5C || op == 0x6C || op == 0x7C || op == 0xDC) return true;
+                        st = step(in, st);
+                        x += in.len;
+                    }
+                    return false;
+                };
+                std::map<uint32_t, std::pair<uint32_t, bool>> cand;     // target -> (first site, called)
+                for (auto &sg : img.segs) {
+                    for (size_t i = 0; i + 3 <= sg.data.size(); i++) {
+                        uint8_t op = sg.data[i];
+                        if (op != 0x20 && op != 0x4C) continue;
+                        uint32_t x = sg.base + (uint32_t)i;
+                        if (codeAt(x, 3) || inData(dataR, x, 3)) continue;
+                        uint32_t t = (x & 0xFF0000) | (uint32_t)(sg.data[i + 1] | (sg.data[i + 2] << 8));
+                        if (!am.contains(t) || decoded.count(t) || in.count(t) || codeAt(t, 1) || inData(dataR, t, 1) || cand.count(t)) continue;
+                        size_t av; const uint8_t *p = am.at(t, av);
+                        if (!p || av < 8) continue;
+                        bool same = true, high = true;
+                        for (int q = 0; q < 8; q++) { if (p[q] != p[0]) same = false; if (p[q] < 0xA0) high = false; }
+                        if (same || high) continue;
+                        size_t pav; bool okPrev = !am.contains(t - 1);
+                        const uint8_t *q1 = am.at(t - 1, pav);
+                        if (q1 && (*q1 == 0x60 || *q1 == 0x40 || (*q1 == 0x6B && w816))) okPrev = true;
+                        const uint8_t *q3 = t >= 3 ? am.at(t - 3, pav) : nullptr;
+                        if (q3 && pav >= 3 && (*q3 == 0x4C || *q3 == 0x6C)) okPrev = true;
+                        if (!okPrev || !probe2(t, o.entryState)) continue;
+                        cand[t] = {x, op == 0x20};
+                    }
+                }
+                for (auto &c : cand) {
+                    if (in.count(c.first) || codeAt(c.first, 1)) continue;
+                    out.seedEntries.insert(c.first);
+                    out.notes.push_back("auto entry " + hex6(c.first) + ": in-image " + (c.second.second ? "jsr" : "jmp") + " target (bytes at " + hex6(c.second.first) +
+                                        "), seeded because flow leaves the image at " + hex6(leftAt) + " (--no-seed-targets disables)");
+                    label(c.first, c.second.second ? LK_SUB : LK_CODE);
+                    flow(c.first, o.entryState);
+                    immAdded++;
+                }
             }
         }
         if (!o.followTables) { run(); if (out.tables.size() == before && immAdded == 0) break; continue; }
@@ -1607,6 +1795,13 @@ static bool analyzeOnce(const Image &img, const Hints &h, const AnalyzeOptions &
     }
     applyHints(true);
     run();
+    for (auto it = out.constInd.begin(); it != out.constInd.end();) {     // later flow may add a path: check again
+        uint32_t t;
+        if (constPtr(it->first, t) && t == it->second) { ++it; continue; }
+        out.notes.push_back("warning: constant pointer at " + hex6(it->first) + " no longer holds after later flow; target " + hex6(it->second) + " kept, jump treated as unresolved");
+        out.dispatch[it->first] = "unknown: pointer not constant on every path";
+        it = out.constInd.erase(it);
+    }
     // A table entry that later code flow decoded over is not possible (tables
     // are data before flow resumes), but code found earlier can never be inside
     // a table either: the heuristic stops at decoded bytes.
@@ -1637,6 +1832,10 @@ static bool analyzeOnce(const Image &img, const Hints &h, const AnalyzeOptions &
             out.code.erase(prevA);
             out.notes.push_back("single-byte BRK at " + hex6(prevA) + ": flow continues at " + hex6(a));
             any = false;
+        }
+        if (any && a < end && o.userEntries.count(a) && !o.userEntries.count(prevA)) {   // --entry wins an overlap
+            out.notes.push_back("dropped overlapping instruction at " + hex6(prevA) + " (overlaps --entry " + hex6(a) + ")");
+            out.code.erase(prevA); out.droppedOverlaps++; any = false;
         }
         if (any && a < end) {
             auto lb = out.labels.find(a);
@@ -1737,6 +1936,7 @@ static std::string cswRisk(const Image &img, const Analysis &a, Cpu cpu, Platfor
     for (uint32_t s : a.indSites) {
         if (dead.count(s)) continue;
         bool res = false;
+        if (a.constInd.count(s)) res = true;
         for (auto &t : a.tables) if (t.user == s) res = true;
         const CodeInsn *ci = at(s);
         if (ci && ci->in.b[0] == 0x6C && ci->in.b[2] == 0)
@@ -1764,7 +1964,7 @@ static std::string cswRisk(const Image &img, const Analysis &a, Cpu cpu, Platfor
         return false;
     };
     // relocator
-    std::set<uint32_t> exempt;
+    std::set<uint32_t> exempt(a.copyStoresIn.begin(), a.copyStoresIn.end());   // copy-loop stores onto an auto region write the listed bytes
     std::map<uint32_t, std::pair<uint32_t, uint32_t>> relocPtr;   // run-once pointer copy store -> [D, D + N pages)
     uint32_t base = img.segs.empty() ? 0 : img.segs[0].base;
     // the loop runs once and copies N pages from S onto D; ex: its stores that patch the copy
@@ -1913,11 +2113,15 @@ static std::string cswRisk(const Image &img, const Analysis &a, Cpu cpu, Platfor
     // entered only by the ldx fall-through and the back branch, no other X write or width change, and no
     // byte of it reachable by a store (recomputed on every pass with that pass's mods)
     bool loopIgnoreU = false;      // code-hit ranges only: unknown-target stores assumed not to patch the loop (default mode)
-    auto loopX = [&](uint32_t A, const State &s, uint32_t &lo, uint32_t &hi) -> bool {
+    auto loopX = [&](uint32_t A, const State &s, uint32_t &lo, uint32_t &hi, bool yr = false) -> bool {
+        const uint8_t LD = yr ? 0xA0 : 0xA2, INC = yr ? 0xC8 : 0xE8, DEC = yr ? 0x88 : 0xCA, CP = yr ? 0xC0 : 0xE0;
         auto isCtl = [](uint8_t o) { return (o & 0x1F) == 0x10 || o == 0x80 || o == 0x82 || o == 0x4C || o == 0x5C || o == 0x6C || o == 0x7C || o == 0xDC ||
                                             o == 0x20 || o == 0x22 || o == 0xFC || o == 0x60 || o == 0x6B || o == 0x40 || o == 0x00 || o == 0x02 || o == 0xCB || o == 0xDB; };
-        auto xw = [](uint8_t o) { return o == 0xA2 || o == 0xA6 || o == 0xAE || o == 0xB6 || o == 0xBE || o == 0xAA || o == 0xBA || o == 0xFA || o == 0xE8 || o == 0xCA ||
-                                         o == 0x28 || o == 0xC2 || o == 0xE2 || o == 0xFB || o == 0x9B || o == 0xBB; };   // also tyx/plp/rep/sep/xce
+        auto yw = [](uint8_t o) { return o == 0xA0 || o == 0xA4 || o == 0xAC || o == 0xB4 || o == 0xBC || o == 0xA8 || o == 0x7A || o == 0xC8 || o == 0x88 ||
+                                         o == 0x28 || o == 0xC2 || o == 0xE2 || o == 0xFB || o == 0xBB || o == 0x9B; };   // ldy/tay/ply/iny/dey, plp/rep/sep/xce, tyx/txy
+        auto xw0 = [](uint8_t o) { return o == 0xA2 || o == 0xA6 || o == 0xAE || o == 0xB6 || o == 0xBE || o == 0xAA || o == 0xBA || o == 0xFA || o == 0xE8 || o == 0xCA ||
+                                         o == 0x28 || o == 0xC2 || o == 0xE2 || o == 0xFB || o == 0x9B || o == 0xBB; };
+        auto xw = [&](uint8_t o) { return yr ? yw(o) : xw0(o); };   // also tyx/plp/rep/sep/xce
         int xs = (!w816 || s.e == 1) ? 1 : s.x;
         if (xs < 0) return false;
         // the back branch: straight-line forward from A
@@ -1925,7 +2129,7 @@ static std::string cswRisk(const Image &img, const Analysis &a, Cpu cpu, Platfor
         for (int n = 0; n < 24; n++) {
             const CodeInsn *c = at(B); if (!c) return false;
             uint8_t o = c->in.b[0];
-            if (o == 0x10 || o == 0xD0) { bi = c; break; }
+            if (o == 0x10 || o == 0xD0 || o == 0x90) { bi = c; break; }
             if (isCtl(o)) return false;
             B += c->in.len;
         }
@@ -1939,7 +2143,7 @@ static std::string cswRisk(const Image &img, const Analysis &a, Cpu cpu, Platfor
         const CodeInsn *P = nullptr;
         for (auto it = a.code.lower_bound(T >= 4 ? T - 4 : 0); it != a.code.end() && it->first < T; ++it)
             if (it->first + it->second.in.len == T) P = &it->second;
-        if (!P || P->in.b[0] != 0xA2) return false;
+        if (!P || P->in.b[0] != LD) return false;
         int pxs = (!w816 || P->st.e == 1) ? 1 : P->st.x;
         if (pxs != xs || (uint32_t)P->in.len != (xs ? 2u : 3u)) return false;
         auto hitM = [&](uint32_t x0, uint32_t n) {
@@ -1948,26 +2152,52 @@ static std::string cswRisk(const Image &img, const Analysis &a, Cpu cpu, Platfor
                 if (modsIn) for (auto &r : *modsIn) { if ((r.u || r.d) && loopIgnoreU) continue; if (r.n == ~0u || ((r.lo & 0xFF0000) == (x & 0xFF0000) && (uint32_t)((x - r.lo) & 0xFFFF) < r.n)) return true; }
             }
             return false; };
-        if (hitM(T - P->in.len, B + 2 - (T - P->in.len))) return false;
+        // the ldx #imm runs once from a strict entry run nothing re-enters: its on-disk value starts the loop
+        uint32_t P0 = T - P->in.len;
+        bool pOnce = a.prefixRun.count(P0) && !a.prefixBadIn.count(P0);
+        if (pOnce ? hitM(T, B + 2 - T) : hitM(P0, B + 2 - P0)) return false;
         int k = 0, j = 0; uint8_t stepOp = 0; uint32_t lastOp = 0;
         for (uint32_t q = T; q < B;) {
             const CodeInsn *c = at(q); if (!c) return false;
             int cxs = (!w816 || c->st.e == 1) ? 1 : c->st.x;
             if (cxs != xs) return false;
             uint8_t o = c->in.b[0];
-            if (o == 0xCA || o == 0xE8) { if (stepOp && o != stepOp) return false; stepOp = o; k++; if (q < A) j++; lastOp = q; }
+            if (o == DEC || o == INC) { if (stepOp && o != stepOp) return false; stepOp = o; k++; if (q < A) j++; lastOp = q; }
             else if (xw(o)) return false;
             q += c->in.len;
         }
-        if (!k || k > 4 || lastOp + 1 != B) return false;      // the step sets the branch's flags
         int64_t W = xs ? 0x100 : 0x10000, H = W / 2, v0 = (xs ? P->in.b[1] : (P->in.b[1] | P->in.b[2] << 8));
         int64_t mn, mx;
-        bool dec = stepOp == 0xCA, bpl = bi->in.b[0] == 0x10;
+        bool dec = stepOp == DEC, bpl = bi->in.b[0] == 0x10;
+        // step / cpx #n / bne: X runs from v0 by k until it equals n (no wrap)
+        uint32_t cl = xs ? 2u : 3u; const CodeInsn *cp = B >= T + cl ? at(B - cl) : nullptr;
+        if (bi->in.b[0] == 0x90) {     // step up / cpx #n / bcc: X from v0 while below n (no wrap)
+            if (!k || k > 4 || dec || !cp || cp->in.b[0] != CP || (uint32_t)cp->in.len != cl || lastOp + 1 != B - cl) return false;
+            int64_t n = xs ? cp->in.b[1] : (cp->in.b[1] | cp->in.b[2] << 8);
+            if (n + k > W) return false;
+            mn = v0; mx = v0 < n ? v0 + ((n - 1 - v0) / k) * k : v0;
+            mn += j; mx += j;
+            if (mx >= W) return false;
+            lo = (uint32_t)mn; hi = (uint32_t)mx; return true;
+        }
+        if (k && k <= 4 && !bpl && cp && cp->in.b[0] == CP && (uint32_t)cp->in.len == cl && lastOp + 1 == B - cl) {
+            int64_t n = xs ? cp->in.b[1] : (cp->in.b[1] | cp->in.b[2] << 8);
+            if (dec && n > v0) n -= W;          // count down through 0 to W-1 ($FF): values v0..0
+            if (!dec && n < v0) n += W;         // count up through W-1 to 0
+            if (dec) { if (n >= v0 || (v0 - n) % k) return false; mn = n + k; mx = v0; }
+            else { if (n <= v0 || (n - v0) % k) return false; mn = v0; mx = n - k; }
+            if (dec) { mn -= j; mx -= j; } else { mn += j; mx += j; }
+            if (mn < 0 || mx >= W) return false;
+            lo = (uint32_t)mn; hi = (uint32_t)mx; return true;
+        }
+        if (!k || k > 4 || lastOp + 1 != B) return false;      // the step sets the branch's flags
         if (dec && bpl) { if (v0 >= H) return false; mn = v0 % k; mx = v0; }
-        else if (dec) { if (v0 == 0 || v0 % k) return false; mn = k; mx = v0; }
+        else if (dec && v0 == 0) { if (W % k) return false; mn = 0; mx = W - k; }          // 0, W-k .. k: every step of the page
+        else if (dec) { if (v0 % k) return false; mn = k; mx = v0; }
         else if (bpl) { if (v0 >= H) return false; mx = v0 + ((H - 1 - v0) / k) * k; mn = v0; }
-        else { if (v0 == 0 || (W - v0) % k) return false; mn = v0; mx = W - k; }
+        else { if ((W - v0) % k) return false; mn = v0; mx = W - k; }                       // v0 == 0: the whole page, still proven
         if (dec) { mn -= j; mx -= j; } else { mn += j; mx += j; }
+        if ((mn < 0 || mx >= W) && v0 == 0 && !bpl && k == 1) { mn = 0; mx = W - 1; }   // whole page, shifted: still the whole page
         if (mn < 0 || mx >= W) return false;
         lo = (uint32_t)mn; hi = (uint32_t)mx; return true;
     };
@@ -2037,9 +2267,14 @@ static std::string cswRisk(const Image &img, const Analysis &a, Cpu cpu, Platfor
             break;
         }
         case ABS: dataSpan(ab, wd); break;
-        case ABSX: case ABSY:
-            idxR(md == ABSX ? st.rx : st.ry, s, lo, hi); if (md == ABSX && lo != hi) loopX(ci.in.addr, s, lo, hi); if (lo != hi) w.exact = false;
-            dataSpan(ab + lo, hi - lo + wd); break;
+        case ABSX: case ABSY: {
+            const RV &ir = md == ABSX ? st.rx : st.ry;
+            idxR(ir, s, lo, hi); bool bounded = ir.sym == -2;
+            if (lo != hi && loopX(ci.in.addr, s, lo, hi, md == ABSY)) bounded = true;
+            if (lo != hi) w.exact = false;
+            // an index no value range or loop bound proves: an unknown target (advisory for code unless --strict-smc)
+            if (!bounded) w.full = true;
+            dataSpan(ab + lo, hi - lo + wd); break; }
         case LONG: case LONGX: {
             uint32_t L = in.b[1] | (in.b[2] << 8) | (in.b[3] << 16);
             if (md == LONGX) { idxR(st.rx, s, lo, hi); if (lo != hi) loopX(ci.in.addr, s, lo, hi); if (lo != hi) w.exact = false; }
@@ -2495,6 +2730,31 @@ static std::string cswRisk(const Image &img, const Analysis &a, Cpu cpu, Platfor
             return hit; };
         std::vector<Rg> hit = hits(w);
         if (hit.empty()) continue;
+        {   // lda S,r / sta D,r: a copy that writes the bytes the listing already shows at D (S and D hold equal bytes) changes nothing
+            const Insn &si2 = kv.second.in; uint8_t so = si2.b[0];
+            const CodeInsn *ld = nullptr;
+            if (so == 0x9D || so == 0x99)
+                for (auto it = a.code.lower_bound(A >= 3 ? A - 3 : 0); it != a.code.end() && it->first < A; ++it)
+                    if (it->first + it->second.in.len == A) ld = &it->second;
+            if (ld && ld->in.len == 3 && ld->in.b[0] == (so == 0x9D ? 0xBD : 0xB9) && si2.len == 3) {
+                auto imgB = [&](uint32_t x, uint8_t &v) {
+                    for (auto &sg : img.segs) if (x >= sg.base && x < sg.base + sg.data.size()) { v = sg.data[x - sg.base]; return true; }
+                    return false; };
+                auto srcB = [&](uint32_t x, uint8_t &v) {   // raw input loads the whole file at the first base: S reads file bytes
+                    if (img.omf || img.segs.empty()) return imgB(x, v);
+                    uint32_t fo = 0, b0 = img.segs[0].base;
+                    for (auto &sg : img.segs) { if (x >= b0 + fo && x < b0 + fo + sg.data.size()) { v = sg.data[x - b0 - fo]; return true; } fo += (uint32_t)sg.data.size(); }
+                    return false; };
+                uint32_t S = K | opw0(*ld), D = K | opw0(kv.second);
+                bool same = true;
+                for (auto &g : hit) for (uint32_t x = g.lo; x < g.lo + g.n && same; x++) {
+                    uint8_t u, v; uint32_t off = (x - D) & 0xFFFF;
+                    if (!imgB(x, v)) continue;                       // not listed: nothing to change
+                    if (!srcB(K | ((S + off) & 0xFFFF), u) || u != v || patchedIn.count(K | ((S + off) & 0xFFFF))) same = false;
+                }
+                if (same) continue;
+            }
+        }
         // a single exact byte on an immediate operand: allowed, the operand's value becomes unknown
         if (w.exact && tot == 1 && !w.dp && immOperand(hit[0].lo)) { patchedOut.insert(hit[0].lo); continue; }
         why("store that may modify code (self-modifying code)" + where);
@@ -2665,6 +2925,7 @@ static std::set<uint32_t> preStoreBytes(const Analysis &a) {      // flowComplet
     std::set<uint32_t> out;
     for (uint32_t s : a.indSites) {
         bool res = false;
+        if (a.constInd.count(s)) res = true;
         for (auto &t : a.tables) if (t.user == s) res = true;
         if (!res) return out;
     }
@@ -2732,7 +2993,9 @@ static std::set<uint32_t> dominatedBytes(const Analysis &a, const Mods &mods, bo
     std::set<uint32_t> out;
     bool complete = optimistic || flowComplete(a, cswWhy);   // optimistic: checked on the pass that used the result
     bool hardInc = false;    // an unresolved indirect jump or a refused entry: unknown edges from anywhere
-    for (uint32_t s : a.indSites) { bool res = false; for (auto &t : a.tables) if (t.user == s) res = true; if (!res) { complete = false; hardInc = true; } }
+    for (uint32_t s : a.indSites) { bool res = false; if (a.constInd.count(s)) res = true;
+        for (auto &t : a.tables) if (t.user == s) res = true;
+        if (!res) { complete = false; hardInc = true; } }
     // where flow leaves the known graph (an unproven call continuation, a computed return, a decode stop):
     // when every such point runs only after the stores of a byte, the unknown edges cannot reach the
     // byte with the original form still in place
@@ -3003,6 +3266,8 @@ static bool analyzeCore(const Image &img, const Hints &h, const AnalyzeOptions &
     AddrMap am(img);
     std::string cswWhy, relocNote;      // non-empty: COUT $FDED is not trusted (why)
     std::set<uint32_t> patched;         // immediate operand bytes written by exact stores (values unknown)
+    int pruneRuns = 0;
+    std::set<uint32_t> banned;          // stores whose code a settled pass turned back into data (skipped)
     int patchRuns = 0;
     Mods mods;                          // code bytes other stores may change (the helper emulation refuses them)
     std::set<uint32_t> preStore;        // bytes that run before any store (see preStoreBytes); must hold on the final pass
@@ -3014,13 +3279,49 @@ static bool analyzeCore(const Image &img, const Hints &h, const AnalyzeOptions &
     std::set<uint32_t> notDom;          // bytes once found not dominated (never trusted again)
     std::set<uint32_t> sysFailBad;      // _SysFailMgr sites also entered by a jump (sticky)
     std::set<uint32_t> hintDom;         // dominated bytes that rest on a noreturn hint (tagged in the listing)
+    std::set<uint32_t> prefixBad;       // --strict-smc entry-run sites re-entered and covered by a store (sticky)
+    std::map<uint32_t, uint32_t> prefixJoin;   // entry-run sites a jump or branch also reaches -> length (sticky)
+    std::set<uint32_t> entryWin;        // --entry decoded as on disk although a store may change it (sticky)
     bool lcRisk = false;                // decoded code may switch the language card (ROM no-return list off)
     for (int iter = 0; iter < 64; iter++) {
         Analysis a;
         a.lcRiskIn = lcRisk;
-        a.hintDomIn = hintDom;
+        a.hintDomIn = hintDom; a.prefixBadIn = prefixBad;
+        for (auto &pj : prefixJoin) a.prefixJoinIn.insert(pj.first);
         a.sysFailBadIn = sysFailBad;
+        a.copyStoresIn = o.copyStores; a.copyStoresIn.insert(banned.begin(), banned.end());
         analyzeOnce(img, h, o, dec, a, cswWhy, patched, mods, limits, revoked, stopAfter, carryRevoked, preStore, domBytes);
+        entryWin.insert(a.entryWin.begin(), a.entryWin.end());     // sticky: a later pass may not meet the store again
+        {   // an entry-run site a jump or branch also reaches may run again after a store: not trusted when
+            // some store's range covers it (redo); sticky, as a later pass may no longer decode the joining branch
+            bool nb = false;
+            for (uint32_t x : a.prefixRun) {
+                auto c = a.ctlSrc.find(x); if (c == a.ctlSrc.end()) continue;
+                bool j = false;     // the run's own jmp abs into x is no join; any other transfer is
+                for (uint32_t y : c->second) {
+                    if (y == ~0u) continue;
+                    auto yi = a.code.find(y);
+                    bool own = a.prefixRun.count(y) && yi != a.code.end() && yi->second.in.b[0] == 0x4C && yi->second.in.len == 3;
+                    if (!own) j = true;
+                }
+                if (!j) continue;
+                auto xi = a.code.find(x); uint32_t xl = xi != a.code.end() ? xi->second.in.len : 1;
+                if (!prefixJoin.count(x)) nb = true;     // the run ended here: redo without what it passed on
+                uint32_t &pl = prefixJoin[x]; pl = std::max(pl, xl);
+            }
+            // re-entered: dropped only if this pass's store ranges cover the site (else the later runs read
+            // the same bytes); at the fixpoint these are the final ranges
+            for (auto &pj : prefixJoin) {
+                if (prefixBad.count(pj.first)) continue;
+                bool cov = false;
+                for (uint32_t q = pj.first; q < pj.first + pj.second && !cov; q++) {
+                    if (patched.count(q)) cov = true;
+                    for (auto &r : mods) if (r.n == ~0u || ((r.lo & 0xFF0000) == (q & 0xFF0000) && (uint32_t)((q - r.lo) & 0xFFFF) < r.n)) { cov = true; break; }
+                }
+                if (cov && prefixBad.insert(pj.first).second) nb = true;
+            }
+            if (nb) continue;
+        }
         bool changed = false;
         // _SysFailMgr needs X = $1503 from the ldx right before it: a site also entered by a jump is an ordinary call
         { bool nb = false; for (uint32_t x : a.sysFailIn) { auto cs = a.ctlSrc.find(x); auto lb = a.labels.find(x);
@@ -3097,6 +3398,19 @@ static bool analyzeCore(const Image &img, const Hints &h, const AnalyzeOptions &
             std::string allW; for (auto &x : lastWhy) allW += x + "\n";
             if (!preStore.empty() && !flowComplete(a, allW + cswWhy)) { preFailed = true; preStore.clear(); patchRuns = 0; continue; }
         }
+        // a store recorded from code a later pass turned back into data no longer counts: skip such
+        // stores and redo from scratch; a skipped store whose code comes back is counted again
+        if (pruneRuns < 4 && !unionMode) {
+            std::set<uint32_t> nb;
+            for (uint32_t x : banned) if (!a.code.count(x)) nb.insert(x);
+            for (auto &r : mods) if (r.by != 0 && !a.code.count(r.by)) nb.insert(r.by);
+            if (nb != banned) {
+                banned = nb; pruneRuns++;
+                mods.clear(); patched.clear(); cswWhy.clear(); domBytes.clear(); notDom.clear(); hintDom.clear();
+                patchRuns = 0; preStore.clear(); preRuns = 0; preFailed = false; fixRuns = 0; domOpt = true;
+                iter = -1; continue;
+            }
+        }
         // G1: a carry taken from the loop exit holds only if X is entered by the exit branch alone:
         // (a) nothing falls into X, (b) no other control transfer lands in [X, adc],
         // (c) no unresolved indirect jump exists anywhere in the image; a clc/sec in the exit
@@ -3119,7 +3433,8 @@ static bool analyzeCore(const Image &img, const Hints &h, const AnalyzeOptions &
             for (uint32_t s : a.indSites) {
                 if (s > c.adc && s < c.hi) continue;           // the helper's own return through the pointer
                 bool res = false;
-                for (auto &t : a.tables) if (t.user == s) res = true;
+                if (a.constInd.count(s)) res = true;
+        for (auto &t : a.tables) if (t.user == s) res = true;
                 if (!res) { why = "indirect"; break; }
             }
             for (auto t = a.ctlSrc.lower_bound(c.from); why.empty() && t != a.ctlSrc.end() && t->first <= c.adc; ++t)
@@ -3235,6 +3550,7 @@ static bool analyzeCore(const Image &img, const Hints &h, const AnalyzeOptions &
                 for (auto &r : lastWhy) j += (j.empty() ? "" : "; ") + r;
                 a.notes.push_back("unknown-target stores still count for return frames, CSW and inline helpers: COUT $FDED is not trusted (" + (j.empty() ? cswWhy : j) + ")");
             }
+            for (uint32_t e : entryWin) if (a.code.count(e)) a.notes.push_back("--entry " + hex6(e) + " decoded as on disk although a store may change it (self-modifying code)");
             out = std::move(a);
             return true;
         }
@@ -3263,6 +3579,86 @@ bool analyze(const Image &img, const Hints &h, const AnalyzeOptions &o, Decoder 
         if (auto p = note.rfind(smc); p != std::string::npos) note.insert(p, tag); else note += tag;
     }
     return ok;
+}
+
+std::vector<Hints::Region> detectMoves(const Image &img, const Analysis &a, uint32_t org, std::vector<std::string> &notes, std::set<uint32_t> &copyStores) {
+    std::vector<Hints::Region> out;
+    if (img.segs.size() != 1 || img.segs[0].base != org || org > 0xFFFF) return out;
+    const uint32_t fend = org + (uint32_t)img.segs[0].data.size();
+    auto at = [&](uint32_t x) -> const CodeInsn * { auto it = a.code.find(x); return it == a.code.end() ? nullptr : &it->second; };
+    auto before = [&](uint32_t x) -> const CodeInsn * {          // the instruction ending at x
+        auto it = a.code.lower_bound(x >= 4 ? x - 4 : 0);
+        for (; it != a.code.end() && it->first < x; ++it) if (it->first + it->second.in.len == x) return &it->second;
+        return nullptr;
+    };
+    auto predOf = [&](uint32_t x) -> const CodeInsn * {          // straight-line only (no join at x)
+        if (a.ctlSrc.count(x) || a.labels.count(x)) return nullptr;
+        return before(x);
+    };
+    auto h4 = [](uint32_t v) { char b[16]; snprintf(b, sizeof b, "$%04X", v & 0xFFFF); return std::string(b); };
+    auto add = [&](uint32_t S, uint32_t n, uint32_t D, uint32_t mover, uint32_t jmp, uint32_t T, const std::string &how, std::vector<uint32_t> st = {}) -> bool {
+        if (n == 0 || S < org || S + n > fend || D + n > 0x10000) return false;
+        if (D < fend && org < D + n) return false;                                   // destination inside the file
+        if ((mover >= S && mover < S + n) || (jmp >= S && jmp < S + n)) return false; // the mover copies itself
+        for (auto &r : out) if (S < org + r.fileOff + r.len && org + r.fileOff < S + n) return false;
+        copyStores.insert(st.begin(), st.end());
+        out.push_back({S - org, n, D});
+        notes.push_back("auto region: " + h4(S) + "-" + h4(S + n - 1) + " listed at " + h4(D) + " (" + how + " at " + h4(mover) + ", then jmp " + h4(T) +
+                        "; --no-auto-region disables)");
+        return true;
+    };
+    for (auto &kv : a.code) {
+        const Insn &in = kv.second.in; uint32_t J = kv.first;
+        // monitor MOVE
+        if (in.b[0] == 0x20 && in.b[1] == 0x2C && in.b[2] == 0xFE) {
+            const CodeInsn *jm = at(J + 3);
+            if (!jm || jm->in.b[0] != 0x4C) continue;
+            std::vector<const CodeInsn *> run;
+            for (const CodeInsn *c = predOf(J); c && run.size() < 40; c = predOf(c->in.addr)) run.push_back(c);
+            int A = -1, X = -1, Y = -1, z[256]; for (int &v : z) v = -1;
+            for (auto it = run.rbegin(); it != run.rend(); ++it) {
+                const uint8_t *b = (*it)->in.b;
+                switch (b[0]) {
+                case 0xA9: A = b[1]; break; case 0xA2: X = b[1]; break; case 0xA0: Y = b[1]; break;
+                case 0x85: z[b[1]] = A; break; case 0x86: z[b[1]] = X; break; case 0x84: z[b[1]] = Y; break;
+                case 0x18: case 0x38: case 0xD8: case 0xEA: break;
+                default: A = X = Y = -1; for (int &v : z) v = -1; break;     // anything else: start over
+                }
+            }
+            if (Y != 0 || z[0x3C] < 0 || z[0x3D] < 0 || z[0x3E] < 0 || z[0x3F] < 0 || z[0x42] < 0 || z[0x43] < 0) continue;
+            uint32_t A1 = z[0x3C] | z[0x3D] << 8, A2 = z[0x3E] | z[0x3F] << 8, A4 = z[0x42] | z[0x43] << 8;
+            if (A2 < A1) continue;
+            uint32_t n = A2 - A1 + 1, T = jm->in.b[1] | (jm->in.b[2] << 8);    // MOVE copies A1..A2 inclusive
+            if (T < A4 || T >= A4 + n) continue;
+            add(A1, n, A4, J, J + 3, T, "monitor MOVE");
+            continue;
+        }
+        // ld? #0 / L: (lda S+i*256,r / sta D+i*256,r){1..8} / in? / bne L / jmp T
+        if (in.b[0] == 0xB9 || in.b[0] == 0xBD) {
+            bool y = in.b[0] == 0xB9;
+            auto cs = a.ctlSrc.find(J);
+            if (cs == a.ctlSrc.end() || cs->second.size() != 1) continue;     // L: entered by the back branch only (and the ld?)
+            const CodeInsn *ld = before(J);
+            if (!ld || ld->in.b[0] != (y ? 0xA0 : 0xA2) || ld->in.b[1] != 0) continue;
+            uint32_t S = in.b[1] | in.b[2] << 8, D = 0, q = J, k = 0; std::vector<uint32_t> sts;
+            for (; k < 8; k++) {
+                const CodeInsn *l = at(q), *s2 = l ? at(q + 3) : nullptr;
+                if (!l || !s2 || l->in.b[0] != in.b[0] || s2->in.b[0] != (y ? 0x99 : 0x9D)) break;
+                uint32_t ls = l->in.b[1] | l->in.b[2] << 8, ds = s2->in.b[1] | s2->in.b[2] << 8;
+                if (k == 0) D = ds;
+                if (ls != S + k * 0x100 || ds != D + k * 0x100) break;
+                sts.push_back(q + 3); q += 6;
+            }
+            const CodeInsn *ic = at(q), *bn = ic ? at(q + 1) : nullptr, *jm = bn ? at(q + 3) : nullptr;
+            if (!k || !ic || ic->in.b[0] != (y ? 0xC8 : 0xE8) || !bn || bn->in.b[0] != 0xD0 || ((q + 3 + (int8_t)bn->in.b[1]) & 0xFFFF) != J || !jm || jm->in.b[0] != 0x4C) continue;
+            if (*cs->second.begin() != q + 1) continue;
+            uint32_t T = jm->in.b[1] | (jm->in.b[2] << 8), n = k * 0x100;
+            if (T < D || T >= D + n) continue;
+            add(S, n, D, J, q + 3, T, "page copy", sts);
+        }
+    }
+    std::sort(out.begin(), out.end(), [](const Hints::Region &x, const Hints::Region &y) { return x.fileOff < y.fileOff; });
+    return out;
 }
 
 }  // namespace da

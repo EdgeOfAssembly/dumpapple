@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g3_bpl.bin
+; dumpapple 0.10.0 listing of tests/progs/g3_bpl.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g3_bpl.o g3_bpl.s
 ;          ld65 -C g3_bpl.cfg -o g3_bpl.bin g3_bpl.o

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2a_plp.bin
+; dumpapple 0.10.0 listing of tests/progs/g2a_plp.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2a_plp.o g2a_plp.s
 ;          ld65 -C g2a_plp.cfg -o g2a_plp.bin g2a_plp.o

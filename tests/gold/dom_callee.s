@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/dom_callee.bin
+; dumpapple 0.10.0 listing of tests/progs/dom_callee.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o dom_callee.o dom_callee.s
 ;          ld65 -C dom_callee.cfg -o dom_callee.bin dom_callee.o

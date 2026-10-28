@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/s01_bbscpx.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/s01_bbscpx.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_s01_bbscpx.o cpuauto_s01_bbscpx.s
 ;          ld65 -C cpuauto_s01_bbscpx.cfg -o cpuauto_s01_bbscpx.bin cpuauto_s01_bbscpx.o

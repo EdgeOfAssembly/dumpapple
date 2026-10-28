@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/r07.bin
+; dumpapple 0.10.0 listing of tests/progs/r07.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o r07.o r07.s
 ;          ld65 -C r07.cfg -o r07.bin r07.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65816"
 

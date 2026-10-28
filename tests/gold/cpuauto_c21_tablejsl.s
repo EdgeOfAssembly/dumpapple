@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c21_tablejsl.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c21_tablejsl.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c21_tablejsl.o cpuauto_c21_tablejsl.s
 ;          ld65 -C cpuauto_c21_tablejsl.cfg -o cpuauto_c21_tablejsl.bin cpuauto_c21_tablejsl.o

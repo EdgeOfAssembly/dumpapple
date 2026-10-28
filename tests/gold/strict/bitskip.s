@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/bitskip.bin
+; dumpapple 0.10.0 listing of tests/progs/bitskip.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o bitskip.o bitskip.s
 ;          ld65 -C bitskip.cfg -o bitskip.bin bitskip.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: overlapping entry point at $002009 (BIT-skip style; label emitted as an equate)
 
 .setcpu "65816"

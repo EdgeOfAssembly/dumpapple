@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_bcs_ft.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_bcs_ft.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_bcs_ft.o g1_bcs_ft.s
 ;          ld65 -C g1_bcs_ft.cfg -o g1_bcs_ft.bin g1_bcs_ft.o

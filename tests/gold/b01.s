@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/b01.bin
+; dumpapple 0.10.0 listing of tests/progs/b01.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o b01.o b01.s
 ;          ld65 -C b01.cfg -o b01.bin b01.o

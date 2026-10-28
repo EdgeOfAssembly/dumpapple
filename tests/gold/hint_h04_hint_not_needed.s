@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/src/hint_h04_hint_not_needed.bin
+; dumpapple 0.10.0 listing of tests/src/hint_h04_hint_not_needed.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o hint_h04_hint_not_needed.o hint_h04_hint_not_needed.s
 ;          ld65 -C hint_h04_hint_not_needed.cfg -o hint_h04_hint_not_needed.bin hint_h04_hint_not_needed.o

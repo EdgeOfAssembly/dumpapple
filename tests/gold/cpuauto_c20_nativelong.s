@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c20_nativelong.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c20_nativelong.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c20_nativelong.o cpuauto_c20_nativelong.s
 ;          ld65 -C cpuauto_c20_nativelong.cfg -o cpuauto_c20_nativelong.bin cpuauto_c20_nativelong.o

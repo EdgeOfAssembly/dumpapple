@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_clcbcs.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_clcbcs.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o ba_clcbcs.o ba_clcbcs.s
 ;          ld65 -C ba_clcbcs.cfg -o ba_clcbcs.bin ba_clcbcs.o

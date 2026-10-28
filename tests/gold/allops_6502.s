@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/allops_6502.bin
+; dumpapple 0.10.0 listing of tests/progs/allops_6502.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o allops_6502.o allops_6502.s
 ;          ld65 -C allops_6502.cfg -o allops_6502.bin allops_6502.o

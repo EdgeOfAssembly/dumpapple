@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_ptrwrap.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_ptrwrap.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2w_ptrwrap.o g2w_ptrwrap.s
 ;          ld65 -C g2w_ptrwrap.cfg -o g2w_ptrwrap.bin g2w_ptrwrap.o

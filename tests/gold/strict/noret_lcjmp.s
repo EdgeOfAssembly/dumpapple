@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/noret_lcjmp.bin
+; dumpapple 0.10.0 listing of tests/progs/noret_lcjmp.bin
 ; cpu 6502, platform prodos8
 ; rebuild: ca65 --cpu 6502 -t none -o noret_lcjmp.o noret_lcjmp.s
 ;          ld65 -C noret_lcjmp.cfg -o noret_lcjmp.bin noret_lcjmp.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: call to ROM $FF69 at $002008 followed as an ordinary call: decoded code may switch the language card ($C080-$C08F) and map RAM over the ROM
 
 .setcpu "6502"

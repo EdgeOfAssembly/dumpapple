@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/r03.bin
+; dumpapple 0.10.0 listing of tests/progs/r03.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o r03.o r03.s
 ;          ld65 -C r03.cfg -o r03.bin r03.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

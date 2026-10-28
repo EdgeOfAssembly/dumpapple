@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/src/hint_h06c_hint_then_jmp.bin
+; dumpapple 0.10.0 listing of tests/src/hint_h06c_hint_then_jmp.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o hint_h06c_hint_then_jmp.o hint_h06c_hint_then_jmp.s
 ;          ld65 -C hint_h06c_hint_then_jmp.cfg -o hint_h06c_hint_then_jmp.bin hint_h06c_hint_then_jmp.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65C02"
 

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/r06.bin
+; dumpapple 0.10.0 listing of tests/progs/r06.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o r06.o r06.s
 ;          ld65 -C r06.cfg -o r06.bin r06.o

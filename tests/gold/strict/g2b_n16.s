@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2b_n16.bin
+; dumpapple 0.10.0 listing of tests/progs/g2b_n16.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2b_n16.o g2b_n16.s
 ;          ld65 -C g2b_n16.cfg -o g2b_n16.bin g2b_n16.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $002100: return to $2110 does not land right after the last byte read ($210E); bytes after the call left undecoded
 
 .setcpu "6502"

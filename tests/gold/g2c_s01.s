@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2c_s01.bin
+; dumpapple 0.10.0 listing of tests/progs/g2c_s01.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2c_s01.o g2c_s01.s
 ;          ld65 -C g2c_s01.cfg -o g2c_s01.bin g2c_s01.o

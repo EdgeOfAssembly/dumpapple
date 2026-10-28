@@ -22,6 +22,9 @@ struct AnalyzeOptions {
     bool immPointers = true;              // lda #<x / ldx #>x pairs that point at clean code
     long maxSteps = 20000000;
     bool strictSmc = false;               // stores with fully unknown targets may modify code (no assumption)
+    std::set<uint32_t> copyStores;        // stores of a recognized copy loop whose destination is an auto region (they write the listed bytes)
+    bool seedTargets = true;              // flow left the image: seed in-image jsr/jmp targets found in undecoded bytes
+    std::set<uint32_t> userEntries;       // --entry addresses: the on-disk bytes are always decoded there
 };
 
 // A jump/dispatch table found by the heuristic or given by a `table` hint.
@@ -74,6 +77,7 @@ struct Analysis {
     std::set<uint32_t> sysFailIn, sysFailBadIn;  // _SysFailMgr sites taken / input: sites also entered by a jump
     std::map<uint32_t, uint32_t> romCallKept;   // ROM no-return target -> first call site kept as ordinary (LC risk)
     int noreturnCalls = 0;                      // OS calls that do not return (QUIT) or `noreturn` sites
+    std::set<uint32_t> seedEntries;             // auto entries: in-image jsr/jmp targets seeded after flow left the image
     std::set<uint32_t> immEntries;              // code reached only through lda #<x / ldx #>x pairs                     // KIND $02 jump-table entries turned into entry points
     std::vector<JumpTable> tables;              // sorted by addr, non-overlapping
     std::map<uint32_t, std::string> dispatch;   // RTS/RTL/indirect addr -> comment
@@ -88,6 +92,13 @@ struct Analysis {
     std::set<uint32_t> unkStores;                        // stores with a fully unknown target
     bool unkAssumed = false;                             // ... assumed not to modify code (default mode)
     std::set<uint32_t> indSites;                         // decoded jmp (abs)/(abs,x)/[abs], jsr (abs,x)
+    std::set<uint32_t> entryWin;                         // --entry sites decoded as on disk over a store
+    std::set<uint32_t> prefixRun;                        // --strict-smc: every entry-run site (on-disk or not)
+    std::set<uint32_t> prefixWin;                        // --strict-smc: entry-run sites decoded as on disk over a store
+    std::set<uint32_t> prefixBadIn;                      // input: re-entered entry-run sites a store's range covers (not trusted)
+    std::set<uint32_t> prefixJoinIn;                     // input: entry-run sites a jump or branch re-enters (the run ends there)
+    std::set<uint32_t> copyStoresIn;                     // AnalyzeOptions::copyStores
+    std::map<uint32_t, uint32_t> constInd;               // jmp (abs) whose pointer holds one constant on every path: site -> target
     // self-modifying code: the instruction forms that may run at an address whose bytes a store with
     // a known value may change (the encoded form first unless the store runs before it on every path)
     std::map<uint32_t, std::vector<CodeInsn>> variants;
@@ -106,4 +117,10 @@ struct AddrMap {
 // p = entry bytes; hi = the entry's high byte for TK_SPLIT
 uint32_t tableTarget(const JumpTable &t, const uint8_t *p, int hi = -1);
 bool analyze(const Image &img, const Hints &h, const AnalyzeOptions &o, Decoder &dec, Analysis &out);
+// Copy-then-jump recognized on decoded flow of a raw image loaded at org (one segment): monitor
+// MOVE ($3C-$3F, $42/$43 set by immediates, ldy #0, jsr $FE2C) or a ld? #0 / lda S,i / sta D,i
+// (1-8 pages) / in? / bne loop, then jmp into the copy.  Returns `region` triples (file offset,
+// length, run address) and one note each; the copied bytes must lie in the file and the
+// destination outside it.
+std::vector<Hints::Region> detectMoves(const Image &img, const Analysis &a, uint32_t org, std::vector<std::string> &notes, std::set<uint32_t> &copyStores);
 }

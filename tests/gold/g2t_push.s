@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2t_push.bin
+; dumpapple 0.10.0 listing of tests/progs/g2t_push.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o g2t_push.o g2t_push.s
 ;          ld65 -C g2t_push.cfg -o g2t_push.bin g2t_push.o

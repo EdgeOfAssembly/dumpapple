@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_indybank.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_indybank.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2w_indybank.o g2w_indybank.s
 ;          ld65 -C g2w_indybank.cfg -o g2w_indybank.bin g2w_indybank.o

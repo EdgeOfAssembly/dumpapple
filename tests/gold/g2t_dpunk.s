@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2t_dpunk.bin
+; dumpapple 0.10.0 listing of tests/progs/g2t_dpunk.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2t_dpunk.o g2t_dpunk.s
 ;          ld65 -C g2t_dpunk.cfg -o g2t_dpunk.bin g2t_dpunk.o

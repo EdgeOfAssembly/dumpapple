@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2s_nocout.bin
+; dumpapple 0.10.0 listing of tests/progs/g2s_nocout.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2s_nocout.o g2s_nocout.s
 ;          ld65 -C g2s_nocout.cfg -o g2s_nocout.bin g2s_nocout.o

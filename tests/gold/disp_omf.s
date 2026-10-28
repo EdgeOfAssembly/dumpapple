@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/disp.omf
+; dumpapple 0.10.0 listing of tests/progs/disp.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o disp_omf.o disp_omf.s
 ;          ld65 -C disp_omf.cfg -o disp_omf.bin disp_omf.o

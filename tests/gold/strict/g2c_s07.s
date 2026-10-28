@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2c_s07.bin
+; dumpapple 0.10.0 listing of tests/progs/g2c_s07.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2c_s07.o g2c_s07.s
 ;          ld65 -C g2c_s07.cfg -o g2c_s07.bin g2c_s07.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $00210F: COUT $FDED goes through CSW ($36/$37), which the image may change (stack pointer set by tcs at $2107 (stack may not be in page 1)); bytes after the call left undecoded
 
 .setcpu "65816"

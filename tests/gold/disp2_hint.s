@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/disp2.bin
+; dumpapple 0.10.0 listing of tests/progs/disp2.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o disp2_hint.o disp2_hint.s
 ;          ld65 -C disp2_hint.cfg -o disp2_hint.bin disp2_hint.o

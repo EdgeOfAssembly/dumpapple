@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2t_dphit.bin
+; dumpapple 0.10.0 listing of tests/progs/g2t_dphit.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2t_dphit.o g2t_dphit.s
 ;          ld65 -C g2t_dphit.cfg -o g2t_dphit.bin g2t_dphit.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $002003: COUT $FDED goes through CSW ($36/$37), which the image may change (return to an address that is not a caller's frame (rts dispatch) at $2190); bytes after the call left undecoded
 
 .setcpu "65816"

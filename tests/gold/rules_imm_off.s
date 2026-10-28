@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_imm.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_imm.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rules_imm_off.o rules_imm_off.s
 ;          ld65 -C rules_imm_off.cfg -o rules_imm_off.bin rules_imm_off.o

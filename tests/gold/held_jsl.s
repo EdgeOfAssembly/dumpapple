@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/held_jsl.omf
+; dumpapple 0.10.0 listing of tests/progs/held_jsl.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o held_jsl.o held_jsl.s
 ;          ld65 -C held_jsl.cfg -o held_jsl.bin held_jsl.o

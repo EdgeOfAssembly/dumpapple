@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_join2.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_join2.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_join2.o g1_join2.s
 ;          ld65 -C g1_join2.cfg -o g1_join2.bin g1_join2.o

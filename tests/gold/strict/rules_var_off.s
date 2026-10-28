@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_var.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_var.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rules_var_off.o rules_var_off.s
 ;          ld65 -C rules_var_off.cfg -o rules_var_off.bin rules_var_off.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

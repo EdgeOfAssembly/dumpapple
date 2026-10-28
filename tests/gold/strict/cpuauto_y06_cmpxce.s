@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/y06_cmpxce.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/y06_cmpxce.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_y06_cmpxce.o cpuauto_y06_cmpxce.s
 ;          ld65 -C cpuauto_y06_cmpxce.cfg -o cpuauto_y06_cmpxce.bin cpuauto_y06_cmpxce.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65816 (auto: 65816-only rep at $2008 on flow from the entry (3 such instructions); --cpu overrides)
 .setcpu "65816"

@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/omf/fixture_b.omf
+; dumpapple 0.10.0 listing of tests/omf/fixture_b.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o omf_base.o omf_base.s
 ;          ld65 -C omf_base.cfg -o omf_base.bin omf_base.o
 ; input: OMF v2 load file; output is the relocated loaded image, segments in file order
+; note: --strict-smc: seed targets are off (--seed-targets turns them back on)
 
 .setcpu "65816"
 

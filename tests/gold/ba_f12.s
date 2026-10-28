@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_f12.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_f12.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o ba_f12.o ba_f12.s
 ;          ld65 -C ba_f12.cfg -o ba_f12.bin ba_f12.o

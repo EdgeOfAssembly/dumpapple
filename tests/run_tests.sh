@@ -459,6 +459,7 @@ chk allops_65c02 "bbr0 \$12,"
 chk allops_65c02 "smb7 z:\$12"
 chk disp_hints "lda #\$1111"
 chk disp_omf_notables ".byte \$30,\$00,\$38,\$00       ; 02/0020 \[reloc 2@+0 -> seg 1+\$30\]"
+chk strict/disp_omf "seed targets are off (--seed-targets turns them back on)"; nchk strict/disp_omf "auto regions"   # auto regions apply to raw input only: an OMF header does not name them
 # F10: no data line may start inside a relocated field (shows as a negative reloc offset)
 if ngrep -l "\[reloc [0-9]@-" $OUT/*.s; then fail=$((fail+1)); echo "FAIL relocated field split across data lines"; else pass=$((pass+1)); echo "PASS no relocated field split across data lines"; fi
 if ngrep -q "FFFFFFFF" $OUT/*.s; then fail=$((fail+1)); echo "FAIL reloc offset +FFFFFFFF in a listing"; else pass=$((pass+1)); echo "PASS no +FFFFFFFF reloc offsets"; fi
@@ -641,7 +642,7 @@ chk g2a_plp "called at \$002106: decimal mode not known at an add"
 for n in g2a_c39 g2a_c40 g2a_c41 g2a_c43; do chk $n "COUT \$FDED goes through CSW (\$36/\$37), which the image may change"; done
 chk g2a_c42 "the helper sets CSW (\$36/\$37) before calling COUT \$FDED"
 # round 5: sta $2000,x with an unknown 8-bit X writes an unknown value over the helper and the entry: a stop
-chk g2a_absx "opcode may be changed by a store to an unknown value"
+chk strict/g2a_absx "opcode may be changed by a store to an unknown value"; chk g2a_absx "assumes stores with unknown targets"   # unproven index: advisory by default
 for n in g2a_c18 g2a_c22 g2a_plp g2a_c39 g2a_c40 g2a_c41 g2a_c42 g2a_c43 g2a_absx; do nchk $n "returns past"; nchk $n "assumes CSW hook preserves X/Y"; done
 # round 9: write classifier golds
 nchk g2w_long0 "returns past 6 inline bytes"; chk g2w_long0 "not a caller's frame"
@@ -700,7 +701,7 @@ chk g2t_disp "not a caller's frame"; chk g2t_swap "not a caller's frame"; chk g2
 chk g2s_helper "the helper's immediate operand at \$002047 is modified by a store elsewhere"
 chk g2s_ptr "may be changed by the store at \$218C"
 chk g2s_opc "store that may modify code (self-modifying code) at \$2182"
-chk g2s_range "returns past 6 inline bytes"; chk g2s_rngu "decoding stopped at \$218A"; nchk g2s_rngu "returns past"; chk g2t_dpunk "returns past 6 inline bytes"
+chk g2s_range "returns past 6 inline bytes"; chk strict/g2s_rngu "decoding stopped at \$218A"; nchk g2s_rngu "returns past"; chk g2t_dpunk "returns past 6 inline bytes"
 chk g2s_816 "decoding stopped at \$2188"
 chk g2s_nocout "the helper's immediate operand at \$00204D is modified by a store elsewhere"; nchk g2s_nocout "returns past"
 for n in g2s_helper g2s_ptr g2s_opc g2s_816; do nchk $n "returns past"; nchk $n "assumes CSW hook preserves X/Y"; done
@@ -719,12 +720,12 @@ nchk g2c_p10 "returns past"; chk g2c_p10 "not proven"
 chk g2c_p11 "returns past"; nchk g2c_p11 "not proven"
 chk g2c_p12 "returns past"; nchk g2c_p12 "not proven"
 nchk g2c_p13 "returns past"; chk g2c_p13 "not proven"
-nchk g2c_r01 "returns past"; chk g2c_r01 "opcode may be changed by a store to an unknown value"
-nchk g2c_r02 "returns past"; chk g2c_r02 "opcode may be changed by a store to an unknown value"
+nchk g2c_r01 "returns past"; chk strict/g2c_r01 "opcode may be changed by a store to an unknown value"; chk g2c_r01 "assumes stores with unknown targets"
+nchk g2c_r02 "returns past"; chk strict/g2c_r02 "opcode may be changed by a store to an unknown value"; chk g2c_r02 "assumes stores with unknown targets"
 nchk g2c_r03 "returns past"; chk g2c_r03 "not proven"
-nchk g2c_r04 "returns past"; chk g2c_r04 "opcode may be changed by a store to an unknown value"
-nchk g2c_r05 "returns past"; chk g2c_r05 "opcode may be changed by a store to an unknown value"
-nchk g2c_r06 "returns past"; chk g2c_r06 "opcode may be changed by a store to an unknown value"
+nchk g2c_r04 "returns past"; chk strict/g2c_r04 "opcode may be changed by a store to an unknown value"; chk g2c_r04 "assumes stores with unknown targets"
+nchk g2c_r05 "returns past"; chk strict/g2c_r05 "opcode may be changed by a store to an unknown value"; chk g2c_r05 "assumes stores with unknown targets"
+nchk g2c_r06 "returns past"; chk strict/g2c_r06 "opcode may be changed by a store to an unknown value"; chk g2c_r06 "assumes stores with unknown targets"
 nchk g2c_v01 "returns past"; chk g2c_v01 "not proven"
 nchk g2c_s01 "returns past"; chk g2c_s01 "not proven"
 nchk g2c_s02 "returns past"; chk g2c_s02 "not proven"
@@ -755,7 +756,7 @@ nchk g2b_n19 "returns past"; chk g2b_n19 "not proven"
 chk g2b_n21 "returns past"; nchk g2b_n21 "not proven"
 chk g2b_n22 "returns past"; nchk g2b_n22 "not proven"
 chk g2b_n23 "returns past"; nchk g2b_n23 "not proven"
-nchk g2b_n24 "returns past"; chk g2b_n24 "opcode may be changed by a store to an unknown value"
+nchk g2b_n24 "returns past"; chk strict/g2b_n24 "opcode may be changed by a store to an unknown value"; chk g2b_n24 "assumes stores with unknown targets"
 chk g2b_n25 "returns past"; nchk g2b_n25 "not proven"
 chk g2b_n26 "returns past"; nchk g2b_n26 "not proven"
 chk g2b_n27 "returns past"; nchk g2b_n27 "not proven"
@@ -772,10 +773,11 @@ chk ba_join "rts                         ; 00/200B"
 for t in ba_f12 ba_f16 ba_f17; do chk $t 'lda #\$C1'; chk $t 'jsr \$FDED'; done
 for t in ba_s04 ba_s04b; do chk $t 'lda #\$01                    ; 00/2003'; done
 for t in w02 w04 strict/w02 strict/w04; do chk $t 'lda #\$60                    ; 00/2009'; chk $t 'changed by a store before it runs'; done   # known value, store dominates: the patched form is decoded (sec / rep #0 in emulation)
-for t in w01 w02 w03 w04 strict/w01 strict/w02 strict/w03 strict/w04 strict/w05; do case $t in *w02|*w04) ;; *w01|*w05) chk $t 'opcode may be changed by a store to an unknown value';; *) chk $t 'accumulator width unknown';; esac; nchk $t 'lda #\$6060'; nchk $t 'sta \$C000'; done
+for t in w02 w04 strict/w01 strict/w02 strict/w03 strict/w04 strict/w05; do case $t in *w02|*w04) ;; *w01|*w05) chk $t 'opcode may be changed by a store to an unknown value';; *) chk $t 'accumulator width unknown';; esac; nchk $t 'lda #\$6060'; nchk $t 'sta \$C000'; done
 # w05: sta dp with D unknown is a fully unknown target: assumed (and said so) by default, a stop under --strict-smc
 chk w05 '; assumes stores with unknown targets do not modify code'; chk w05 'sta z:\$10                   ; 00/2004: 85 10 ; unknown-target store (assumed not to modify code)'; nchk w05 'decoding stopped'
-for t in w01 w02 w03 w04 strict/w05; do nchk $t 'assumes stores with unknown targets'; done
+for t in w02 w04 strict/w05; do nchk $t 'assumes stores with unknown targets'; done
+for t in w01 w03; do chk $t 'assumes stores with unknown targets'; chk $t 'unknown-target store (assumed not to modify code)'; done   # Y unproven: advisory unless --strict-smc
 # u01/u02: the assumption covers code and widths only; CSW, return frames and inline helpers stay tainted
 for t in u01 u02 strict/u01 strict/u02; do nchk $t 'returns past'; nchk $t 'assumes CSW hook'; case $t in strict/*) chk $t 'opcode may be changed by a store to an unknown value';; *) chk $t 'not proven (helper code at \$2040 may be changed';; esac; done
 for t in u01 u02; do chk $t '; assumes stores with unknown targets do not modify code'; chk $t 'COUT \$FDED is not trusted'; chk $t "not a caller's frame (rts dispatch)"; chk $t 'unknown-target store (assumed not to modify code)'; done
@@ -783,7 +785,8 @@ chk u02 'store that may reach CSW at \$218E'
 for t in strict/u01 strict/u02; do nchk $t 'assumes stores with unknown targets'; nchk $t 'unknown-target store'; done
 # round 3: greatest fixpoint, counted loop bounds, operand/branch-offset hits, whole-bank ranges
 for t in r01 strict/r01; do nchk $t 'decoding stopped'; chk $t 'lda #\$6060                  ; 00/200D'; nchk $t 'unknown-target'; done   # 8-bit ring buffer: the sep stays trusted
-for t in r02 strict/r02; do chk $t 'opcode may be changed by a store to an unknown value'; nchk $t 'unknown-target'; done   # $1F00-$2101 really covers the sep
+for t in r02 strict/r02; do nchk $t 'unknown-target'; done; chk r02 'opcode may be changed by a store to an unknown value'
+chk strict/r02 'runs from the entry before any store'   # strict: the entry run before the first store stays code   # $1F00-$2101 really covers the sep
 for t in r03 strict/r03; do chk $t '00/2006: 90 02 ; changed by a store before it runs: runs as bcc (90 05)'; nchk $t 'lda #\$01'; done   # patched offset: new target only
 chk r04 'runs as sta (8D 00 C1)'; nchk r04 'unknown-target store'; nchk r04 'store whose address operand may be modified'
 nchk strict/r04 'unknown-target store'; nchk strict/r04 'assumes stores with unknown targets'
@@ -806,7 +809,7 @@ chk rules_imm "lda #\$01                    ; 00/2018"
 chk rules_imm '.byte "HELLO"'
 if ngrep -q "00/2018: A9" $OUT/rules_imm_off.s; then fail=$((fail+1)); echo "FAIL --no-imm-pointers"; else pass=$((pass+1)); echo "PASS --no-imm-pointers"; fi
 # round 5: the copy loop writes the region from bytes whose values are not tracked: a stop (caution)
-chk rules_region "opcode may be changed by a store to an unknown value"
+chk strict/rules_region "lda #\$C1                    ; 00/0280"; chk rules_region "lda #\$C1                    ; 00/0280"   # the copy loop writes the listed bytes
 chk rules_region "jmp .loword(L000280)        ; 00/200B"
 chk prodos8_mli ".word .loword(params_00200B)"
 # J1: a short remainder is a truncated entry, a 4-byte zero tail is the terminator
@@ -878,23 +881,26 @@ for t in quit_err strict/quit_err; do chk $t 'QUIT returns only on error (C=1)';
 if DA=$DA sh tests/test_cpu_auto.sh > $OUT/cpu_auto.txt 2>&1; then pass=$((pass+1)); echo "PASS cpu_auto ($(tail -1 $OUT/cpu_auto.txt))"; else fail=$((fail+1)); echo "FAIL cpu_auto: $(grep FAIL $OUT/cpu_auto.txt | tr "\n" ";")"; fi
 for t in dom_fall strict/dom_fall; do chk $t 'runs as rts (60)'; nchk $t 'sta a:\$C000'; done
 
-# review probe sets (tests/adv, ca65/ld65): advws3 must be clean except the four by-design default-mode
+# review probe sets (tests/adv, ca65/ld65): advws3 must be clean under --strict-smc; in default mode only FALSE-CODE
 # cases that the listing header covers ("assumes stores with unknown targets"); adv9 has two LOW over-notes
 if command -v ca65 >/dev/null; then
   for m in "" --strict-smc; do
     python3 tests/adv/advws3.py $DA $OUT/advws3$m $m > $OUT/advws3$m.txt 2>&1
-    n=$(grep -c ' | ' $OUT/advws3$m.txt); badl=$(grep ' | ' $OUT/advws3$m.txt | grep -v ' | OK | \| | CTL:OK | ' | grep -v '^f08_full_bank_16 .*HDR\|^f08b_16_base0100 .*HDR\|^f10d_dp_lda_tcd_patched .*HDR\|^f11b_ptr_operand_patched .*HDR')
+    n=$(grep -c ' | ' $OUT/advws3$m.txt); badl=$(grep ' | ' $OUT/advws3$m.txt | grep -v ' | OK | \| | CTL:OK | ')
+    [ -z "$m" ] && badl=$(echo "$badl" | grep -v '^[a-z0-9_]* | [^|]* | [^|]* | FALSE-CODE@[0-9A-F,]* | HDR |')   # default mode: unknown-target stores are advisory (header says so)
     if [ "$n" = 50 ] && [ -z "$badl" ] && { [ -z "$m" ] || ! grep ' | ' $OUT/advws3$m.txt | grep -qv ' | OK | \| | CTL:OK | '; }; then pass=$((pass+1)); echo "PASS advws3 $m ($n probes)"; else fail=$((fail+1)); echo "FAIL advws3 $m: $badl"; fi
     python3 tests/adv/advws4.py $DA $OUT/advws4$m $m > $OUT/advws4$m.txt 2>&1
     # by design: m03/d02/d03 unknown-target stores the default header discloses; m07/m08 missed code (caution)
     n=$(grep -c ' | ' $OUT/advws4$m.txt); badl=$(grep ' | ' $OUT/advws4$m.txt | grep -v ' | OK | \| | CTL:' | grep -v '^m07_\|^m08_\|^u04_rts_trick .*MISSED-CODE')
     [ -z "$m" ] && badl=$(echo "$badl" | grep -v '^m03_mvn_unk_len .*HDR\|^d02_D5 .*HDR\|^d03_D_loop .*HDR')
+    # an index no range or loop bound proves is an unknown target: advisory by default (strict run must be clean)
+    [ -z "$m" ] && badl=$(echo "$badl" | grep -v '^\(w01_6502_sta_x_rts\|w02b_816_sta_x_rts\|t01_tbl_y_unbounded\|t02_tbl_y_past_end\|t03_tbl_stored\|t04_tbl_y16\|t04b_tbl_y16_live\|t05_tbl_page_cross\|c02_cpx_bpl_signed\|c02b_cpx_bmi\|c03_cmp_A_not_X\|c04_cmp_patched\|c07_cpx_beq\) | [^|]* | [^|]* | FALSE-CODE@[0-9A-F,]* | HDR |')
     if [ "$n" = 50 ] && [ -z "$badl" ]; then pass=$((pass+1)); echo "PASS advws4 $m ($n probes)"; else fail=$((fail+1)); echo "FAIL advws4 $m: $(echo "$badl" | tr "\n" ";")"; fi
     python3 tests/adv/advws5.py $DA $OUT/advws5$m $m > $OUT/advws5$m.txt 2>&1
     # by design: e05 (whole-bank 16-bit Y store, header-disclosed in default mode); b07 missed code (carry
     # unknown, caution); b09's DEAD block really runs (control)
     n=$(grep -c ' | ' $OUT/advws5$m.txt); badl=$(grep ' | ' $OUT/advws5$m.txt | grep -v ' | OK | \| | CTL:OK | \|^b09_jsr_and_fall .*CTL:' | grep -v '^b07_rol_clc_one_path .*MISSED-CODE')
-    [ -z "$m" ] && badl=$(echo "$badl" | grep -v '^e05_wide_16bit_y .*HDR')
+    [ -z "$m" ] && badl=$(echo "$badl" | grep -v '^e05_wide_16bit_y .*HDR\|^e04_setter_in_wide | [^|]* | [^|]* | FALSE-CODE@[0-9A-F,]* | HDR |')
     if [ "$n" = 22 ] && [ -z "$badl" ]; then pass=$((pass+1)); echo "PASS advws5 $m ($n probes)"; else fail=$((fail+1)); echo "FAIL advws5 $m: $(echo "$badl" | tr "\n" ";")"; fi
     python3 tests/adv/advws6.py $DA $OUT/advws6$m $m > $OUT/advws6$m.txt 2>&1
     # conservative stops (live code missed, never false): n03b, n12 (width union), n08 under --strict-smc
@@ -914,6 +920,9 @@ if command -v ca65 >/dev/null; then
     if grep -q '^== 45 cases' $OUT/adv9$m.txt && [ -z "$badl" ]; then pass=$((pass+1)); echo "PASS adv9 $m"; else fail=$((fail+1)); echo "FAIL adv9 $m: $(echo "$badl" | tr "\n" ";")"; fi
   done
 fi
+
+# synthetic edge cases (store classification, --entry, patched transfers)
+if python3 tests/edge_synth.py $DA $OUT/edge > $OUT/edge.txt 2>&1; then pass=$((pass+1)); echo "PASS edge_synth"; else fail=$((fail+1)); echo "FAIL edge_synth: $(grep ' | BAD | ' $OUT/edge.txt | tr "\n" ";")"; fi
 
 # CLI conventions
 if $DA 2>&1 | grep -qi "usage" && $DA >/dev/null 2>&1; then pass=$((pass+1)); echo "PASS no-args exits 0"; else fail=$((fail+1)); echo "FAIL no-args"; fi

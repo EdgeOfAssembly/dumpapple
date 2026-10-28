@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g3_bmi.bin
+; dumpapple 0.10.0 listing of tests/progs/g3_bmi.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g3_bmi.o g3_bmi.s
 ;          ld65 -C g3_bmi.cfg -o g3_bmi.bin g3_bmi.o

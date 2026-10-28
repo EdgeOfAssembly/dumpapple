@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/noret_lcjmpx.bin
+; dumpapple 0.10.0 listing of tests/progs/noret_lcjmpx.bin
 ; cpu 65c02, platform prodos8
 ; rebuild: ca65 --cpu 65C02 -t none -o noret_lcjmpx.o noret_lcjmpx.s
 ;          ld65 -C noret_lcjmpx.cfg -o noret_lcjmpx.bin noret_lcjmpx.o

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/n06b_phkplb16.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/n06b_phkplb16.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_n06b_phkplb16.o cpuauto_n06b_phkplb16.s
 ;          ld65 -C cpuauto_n06b_phkplb16.cfg -o cpuauto_n06b_phkplb16.bin cpuauto_n06b_phkplb16.o

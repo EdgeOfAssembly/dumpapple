@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2s_opc.bin
+; dumpapple 0.10.0 listing of tests/progs/g2s_opc.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2s_opc.o g2s_opc.s
 ;          ld65 -C g2s_opc.cfg -o g2s_opc.bin g2s_opc.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $002003: COUT $FDED goes through CSW ($36/$37), which the image may change (store that may modify code (self-modifying code) at $2182); bytes after the call left undecoded
 
 .setcpu "6502"

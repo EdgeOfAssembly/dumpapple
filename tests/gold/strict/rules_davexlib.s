@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_davex.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_davex.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rules_davexlib.o rules_davexlib.s
 ;          ld65 -C rules_davexlib.cfg -o rules_davexlib.bin rules_davexlib.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

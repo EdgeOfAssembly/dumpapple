@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/mvn_reloc.omf
+; dumpapple 0.10.0 listing of tests/progs/mvn_reloc.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o mvn_reloc.o mvn_reloc.s
 ;          ld65 -C mvn_reloc.cfg -o mvn_reloc.bin mvn_reloc.o
 ; input: OMF v2 load file; output is the relocated loaded image, segments in file order
+; note: --strict-smc: seed targets are off (--seed-targets turns them back on)
 
 .setcpu "65816"
 

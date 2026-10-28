@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_absxbank.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_absxbank.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2w_absxbank.o g2w_absxbank.s
 ;          ld65 -C g2w_absxbank.cfg -o g2w_absxbank.bin g2w_absxbank.o

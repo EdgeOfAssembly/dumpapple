@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/extjmp.bin
+; dumpapple 0.10.0 listing of tests/progs/extjmp.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o extjmp.o extjmp.s
 ;          ld65 -C extjmp.cfg -o extjmp.bin extjmp.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: suggested hint: inline $003000 z (4 call sites look like strings)
 
 .setcpu "6502"

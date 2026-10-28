@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2c_r06.bin
+; dumpapple 0.10.0 listing of tests/progs/g2c_r06.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2c_r06.o g2c_r06.s
 ;          ld65 -C g2c_r06.cfg -o g2c_r06.bin g2c_r06.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_sec_ind.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_sec_ind.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_sec_ind.o g1_sec_ind.s
 ;          ld65 -C g1_sec_ind.cfg -o g1_sec_ind.bin g1_sec_ind.o

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/noret_lcbit.bin
+; dumpapple 0.10.0 listing of tests/progs/noret_lcbit.bin
 ; cpu 6502, platform prodos8
 ; rebuild: ca65 --cpu 6502 -t none -o noret_lcbit.o noret_lcbit.s
 ;          ld65 -C noret_lcbit.cfg -o noret_lcbit.bin noret_lcbit.o

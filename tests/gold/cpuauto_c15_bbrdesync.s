@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c15_bbrdesync.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c15_bbrdesync.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_c15_bbrdesync.o cpuauto_c15_bbrdesync.s
 ;          ld65 -C cpuauto_c15_bbrdesync.cfg -o cpuauto_c15_bbrdesync.bin cpuauto_c15_bbrdesync.o

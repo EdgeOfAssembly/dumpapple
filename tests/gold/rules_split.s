@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rules_split.bin
+; dumpapple 0.10.0 listing of tests/progs/rules_split.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o rules_split.o rules_split.s
 ;          ld65 -C rules_split.cfg -o rules_split.bin rules_split.o

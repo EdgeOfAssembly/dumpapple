@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_tsbhit.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_tsbhit.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o g2w_tsbhit.o g2w_tsbhit.s
 ;          ld65 -C g2w_tsbhit.cfg -o g2w_tsbhit.bin g2w_tsbhit.o

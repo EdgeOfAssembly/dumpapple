@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2s_ptr.bin
+; dumpapple 0.10.0 listing of tests/progs/g2s_ptr.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2s_ptr.o g2s_ptr.s
 ;          ld65 -C g2s_ptr.cfg -o g2s_ptr.bin g2s_ptr.o

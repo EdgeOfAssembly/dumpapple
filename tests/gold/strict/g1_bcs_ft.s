@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_bcs_ft.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_bcs_ft.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_bcs_ft.o g1_bcs_ft.s
 ;          ld65 -C g1_bcs_ft.cfg -o g1_bcs_ft.bin g1_bcs_ft.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: length-prefixed helper $00200E: carry unknown at the return-address add; inline length not applied
 
 .setcpu "6502"

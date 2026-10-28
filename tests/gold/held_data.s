@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/held_data.omf
+; dumpapple 0.10.0 listing of tests/progs/held_data.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o held_data.o held_data.s
 ;          ld65 -C held_data.cfg -o held_data.bin held_data.o

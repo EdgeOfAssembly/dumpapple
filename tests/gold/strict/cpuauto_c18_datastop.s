@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c18_datastop.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c18_datastop.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_c18_datastop.o cpuauto_c18_datastop.s
 ;          ld65 -C cpuauto_c18_datastop.cfg -o cpuauto_c18_datastop.bin cpuauto_c18_datastop.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65C02 (auto: only 1 stray 65816-only byte(s) such as mvp at $2004 on flow from the entry, no brl/jsl/jml/rtl/rep/sep/clc;xce; --cpu overrides)
 .setcpu "65C02"

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/src/hint_h06b_rom_only_guard.bin
+; dumpapple 0.10.0 listing of tests/src/hint_h06b_rom_only_guard.bin
 ; cpu 65c02, platform prodos8
 ; rebuild: ca65 --cpu 65C02 -t none -o hint_h06b_rom_only_guard.o hint_h06b_rom_only_guard.s
 ;          ld65 -C hint_h06b_rom_only_guard.cfg -o hint_h06b_rom_only_guard.bin hint_h06b_rom_only_guard.o

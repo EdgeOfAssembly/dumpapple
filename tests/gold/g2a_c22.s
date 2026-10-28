@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2a_c22.bin
+; dumpapple 0.10.0 listing of tests/progs/g2a_c22.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2a_c22.o g2a_c22.s
 ;          ld65 -C g2a_c22.cfg -o g2a_c22.bin g2a_c22.o

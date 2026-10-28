@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/lenhint.bin
+; dumpapple 0.10.0 listing of tests/progs/lenhint.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o lenhint.o lenhint.s
 ;          ld65 -C lenhint.cfg -o lenhint.bin lenhint.o

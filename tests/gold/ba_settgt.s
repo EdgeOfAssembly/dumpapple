@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_settgt.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_settgt.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o ba_settgt.o ba_settgt.s
 ;          ld65 -C ba_settgt.cfg -o ba_settgt.bin ba_settgt.o

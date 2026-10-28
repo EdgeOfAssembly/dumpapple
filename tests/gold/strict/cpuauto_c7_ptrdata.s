@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c7_ptrdata.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c7_ptrdata.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_c7_ptrdata.o cpuauto_c7_ptrdata.s
 ;          ld65 -C cpuauto_c7_ptrdata.cfg -o cpuauto_c7_ptrdata.bin cpuauto_c7_ptrdata.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65C02 (auto: no 65816-only instruction on flow from the entry; --cpu overrides)
 .setcpu "65C02"

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2_y1.bin
+; dumpapple 0.10.0 listing of tests/progs/g2_y1.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2_y1.o g2_y1.s
 ;          ld65 -C g2_y1.cfg -o g2_y1.bin g2_y1.o

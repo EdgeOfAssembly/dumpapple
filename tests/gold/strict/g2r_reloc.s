@@ -1,9 +1,10 @@
-; dumpapple 0.9.0 listing of tests/progs/g2r_reloc.bin
+; dumpapple 0.10.0 listing of tests/progs/g2r_reloc.bin
 ; cpu 6502, platform prodos8
 ; rebuild: ca65 --cpu 6502 -t none -o g2r_reloc.o g2r_reloc.s
 ;          ld65 -C g2r_reloc.cfg -o g2r_reloc.bin g2r_reloc.o
 ; assumes CSW hook preserves X/Y (an inline-string helper calls COUT $FDED; nothing in the image stores to CSW $36/$37)
 ; assumes decimal mode clear at entry (an inline-string helper adds/subtracts; no cld/sed on the way to its call)
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

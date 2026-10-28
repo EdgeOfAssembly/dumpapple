@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/bank.bin
+; dumpapple 0.10.0 listing of tests/progs/bank.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o bank.o bank.s
 ;          ld65 -C bank.cfg -o bank.bin bank.o

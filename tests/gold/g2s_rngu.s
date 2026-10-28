@@ -1,8 +1,10 @@
-; dumpapple 0.9.0 listing of tests/progs/g2s_rngu.bin
+; dumpapple 0.10.0 listing of tests/progs/g2s_rngu.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2s_rngu.o g2s_rngu.s
 ;          ld65 -C g2s_rngu.cfg -o g2s_rngu.bin g2s_rngu.o
-; note: inline-string helper $002040 called at $002003: COUT $FDED goes through CSW ($36/$37), which the image may change (decoding stopped at $218A (opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)), code there not checked); bytes after the call left undecoded
+; assumes stores with unknown targets do not modify code
+; note: inline-string helper $002040 called at $002003: COUT $FDED goes through CSW ($36/$37), which the image may change (store that may modify code (self-modifying code) at $2185); bytes after the call left undecoded
+; note: unknown-target stores still count for return frames, CSW and inline helpers: COUT $FDED is not trusted (store that may modify code (self-modifying code) at $2185)
 
 .setcpu "6502"
 
@@ -12,7 +14,7 @@
 .org $002000
 entry_002000:
     jsr .loword(sub_002180)     ; 00/2000: 20 80 21
-    jsr .loword(sub_002040)     ; 00/2003: 20 40 20 ; unknown: inline string after jsr $002040 not proven (COUT $FDED goes through CSW ($36/$37), which the image may change (decoding stopped at $218A (opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)), code there not checked))
+    jsr .loword(sub_002040)     ; 00/2003: 20 40 20 ; unknown: inline string after jsr $002040 not proven (COUT $FDED goes through CSW ($36/$37), which the image may change (store that may modify code (self-modifying code) at $2185))
     .byte "HELLO"               ; 00/2006
     .byte $00,$60               ; 00/200B
     .res 51                     ; 00/200D
@@ -43,8 +45,9 @@ L002053:
 sub_002180:
     ldy a:$0300                 ; 00/2180: AC 00 03
     lda #$05                    ; 00/2183: A9 05
-    sta a:$218A,y               ; 00/2185: 99 8A 21
+    sta a:$218A,y               ; 00/2185: 99 8A 21 ; unknown-target store (assumed not to modify code)
     clc                         ; 00/2188: 18
     nop                         ; 00/2189: EA
-; code flow reached here but decoding stopped: opcode may be changed by a store to an unknown value or to one of several values (self-modifying code)
-    .byte $69,$00,$C9,$00,$60   ; 00/218A
+    adc #$00                    ; 00/218A: 69 00
+    cmp #$00                    ; 00/218C: C9 00
+    rts                         ; 00/218E: 60

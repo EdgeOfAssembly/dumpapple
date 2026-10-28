@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c27_longxjsl.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c27_longxjsl.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c27_longxjsl.o cpuauto_c27_longxjsl.s
 ;          ld65 -C cpuauto_c27_longxjsl.cfg -o cpuauto_c27_longxjsl.bin cpuauto_c27_longxjsl.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65816 (auto: 65816-only jsl at $2006 on flow from the entry; --cpu overrides)
 .setcpu "65816"

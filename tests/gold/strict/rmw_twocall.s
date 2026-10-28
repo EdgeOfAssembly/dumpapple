@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/rmw_twocall.bin
+; dumpapple 0.10.0 listing of tests/progs/rmw_twocall.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o rmw_twocall.o rmw_twocall.s
 ;          ld65 -C rmw_twocall.cfg -o rmw_twocall.bin rmw_twocall.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

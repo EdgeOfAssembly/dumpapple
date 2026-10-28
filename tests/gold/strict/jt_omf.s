@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/jt.omf
+; dumpapple 0.10.0 listing of tests/progs/jt.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o jt_omf.o jt_omf.s
 ;          ld65 -C jt_omf.cfg -o jt_omf.bin jt_omf.o
 ; input: OMF v2 load file; output is the relocated loaded image, segments in file order
+; note: --strict-smc: seed targets are off (--seed-targets turns them back on)
 ; note: flow into data at $040012 not followed
 ; note: flow into data at $040020 not followed
 

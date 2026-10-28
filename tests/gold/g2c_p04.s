@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g2c_p04.bin
+; dumpapple 0.10.0 listing of tests/progs/g2c_p04.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2c_p04.o g2c_p04.s
 ;          ld65 -C g2c_p04.cfg -o g2c_p04.bin g2c_p04.o

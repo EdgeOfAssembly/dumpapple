@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c22_dpbefore.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c22_dpbefore.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c22_dpbefore.o cpuauto_c22_dpbefore.s
 ;          ld65 -C cpuauto_c22_dpbefore.cfg -o cpuauto_c22_dpbefore.bin cpuauto_c22_dpbefore.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65816 (auto: 65816-only rep at $2002 on flow from the entry (2 such instructions); --cpu overrides)
 .setcpu "65816"

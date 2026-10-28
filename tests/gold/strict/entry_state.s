@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/disp2.bin
+; dumpapple 0.10.0 listing of tests/progs/disp2.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o entry_state.o entry_state.s
 ;          ld65 -C entry_state.cfg -o entry_state.bin entry_state.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65816"
 

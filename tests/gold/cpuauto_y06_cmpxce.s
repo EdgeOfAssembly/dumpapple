@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/y06_cmpxce.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/y06_cmpxce.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_y06_cmpxce.o cpuauto_y06_cmpxce.s
 ;          ld65 -C cpuauto_y06_cmpxce.cfg -o cpuauto_y06_cmpxce.bin cpuauto_y06_cmpxce.o

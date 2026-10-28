@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c30_endbra.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c30_endbra.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o cpuauto_c30_endbra.o cpuauto_c30_endbra.s
 ;          ld65 -C cpuauto_c30_endbra.cfg -o cpuauto_c30_endbra.bin cpuauto_c30_endbra.o

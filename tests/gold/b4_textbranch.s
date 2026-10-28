@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/b4_textbranch.bin
+; dumpapple 0.10.0 listing of tests/progs/b4_textbranch.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o b4_textbranch.o b4_textbranch.s
 ;          ld65 -C b4_textbranch.cfg -o b4_textbranch.bin b4_textbranch.o

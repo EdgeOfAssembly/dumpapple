@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g2a_c18.bin
+; dumpapple 0.10.0 listing of tests/progs/g2a_c18.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2a_c18.o g2a_c18.s
 ;          ld65 -C g2a_c18.cfg -o g2a_c18.bin g2a_c18.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: inline-string helper $002040 called at $002000: return to $2008 does not land right after the last byte read ($2008); bytes after the call left undecoded
 
 .setcpu "6502"

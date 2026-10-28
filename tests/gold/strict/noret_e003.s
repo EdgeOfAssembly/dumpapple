@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/noret_e003.bin
+; dumpapple 0.10.0 listing of tests/progs/noret_e003.bin
 ; cpu 65c02, platform prodos8
 ; rebuild: ca65 --cpu 65C02 -t none -o noret_e003.o noret_e003.s
 ;          ld65 -C noret_e003.cfg -o noret_e003.bin noret_e003.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65C02"
 

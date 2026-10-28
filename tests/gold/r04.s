@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/r04.bin
+; dumpapple 0.10.0 listing of tests/progs/r04.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o r04.o r04.s
 ;          ld65 -C r04.cfg -o r04.bin r04.o

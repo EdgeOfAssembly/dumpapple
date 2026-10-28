@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/x12_emuplp.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/x12_emuplp.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_x12_emuplp.o cpuauto_x12_emuplp.s
 ;          ld65 -C cpuauto_x12_emuplp.cfg -o cpuauto_x12_emuplp.bin cpuauto_x12_emuplp.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 ; cpu: 65816 (auto: 65816-only rep at $2006 on flow from the entry (4 such instructions); --cpu overrides)
 .setcpu "65816"

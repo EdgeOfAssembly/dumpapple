@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_ft2.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_ft2.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_ft2.o g1_ft2.s
 ;          ld65 -C g1_ft2.cfg -o g1_ft2.bin g1_ft2.o

@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_join.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_join.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o ba_join.o ba_join.s
 ;          ld65 -C ba_join.cfg -o ba_join.bin ba_join.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

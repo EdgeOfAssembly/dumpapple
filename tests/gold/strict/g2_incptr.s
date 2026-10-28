@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/g2_incptr.bin
+; dumpapple 0.10.0 listing of tests/progs/g2_incptr.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g2_incptr.o g2_incptr.s
 ;          ld65 -C g2_incptr.cfg -o g2_incptr.bin g2_incptr.o
 ; assumes CSW hook preserves X/Y (an inline-string helper calls COUT $FDED; nothing in the image stores to CSW $36/$37)
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

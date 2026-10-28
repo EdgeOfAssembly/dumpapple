@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_sec_adc_ind.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_sec_adc_ind.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_sec_adc_ind.o g1_sec_adc_ind.s
 ;          ld65 -C g1_sec_adc_ind.cfg -o g1_sec_adc_ind.bin g1_sec_adc_ind.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: length-prefixed helper $002010: carry unknown at the return-address add; inline length not applied
 
 .setcpu "6502"

@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_rep816.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_rep816.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o ba_rep816.o ba_rep816.s
 ;          ld65 -C ba_rep816.cfg -o ba_rep816.bin ba_rep816.o

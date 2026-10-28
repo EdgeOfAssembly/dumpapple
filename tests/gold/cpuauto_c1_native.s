@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c1_native.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c1_native.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c1_native.o cpuauto_c1_native.s
 ;          ld65 -C cpuauto_c1_native.cfg -o cpuauto_c1_native.bin cpuauto_c1_native.o

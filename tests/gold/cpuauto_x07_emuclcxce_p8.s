@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/x07_emuclcxce.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/x07_emuclcxce.bin
 ; cpu 65816, platform prodos8
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_x07_emuclcxce_p8.o cpuauto_x07_emuclcxce_p8.s
 ;          ld65 -C cpuauto_x07_emuclcxce_p8.cfg -o cpuauto_x07_emuclcxce_p8.bin cpuauto_x07_emuclcxce_p8.o

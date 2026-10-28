@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/emu.bin
+; dumpapple 0.10.0 listing of tests/progs/emu.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o emu.o emu.s
 ;          ld65 -C emu.cfg -o emu.bin emu.o

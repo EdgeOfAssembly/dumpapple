@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/held_jsl.omf
+; dumpapple 0.10.0 listing of tests/progs/held_jsl.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o held_jsl.o held_jsl.s
 ;          ld65 -C held_jsl.cfg -o held_jsl.bin held_jsl.o
 ; input: OMF v2 load file; output is the relocated loaded image, segments in file order
+; note: --strict-smc: seed targets are off (--seed-targets turns them back on)
 ; note: suggested hint: inline $023000 z (3 call sites look like strings)
 
 .setcpu "65816"

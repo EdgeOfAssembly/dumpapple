@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/ba_s04.bin
+; dumpapple 0.10.0 listing of tests/progs/ba_s04.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o ba_s04.o ba_s04.s
 ;          ld65 -C ba_s04.cfg -o ba_s04.bin ba_s04.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "6502"
 

@@ -1,8 +1,9 @@
-; dumpapple 0.9.0 listing of tests/progs/held_data.omf
+; dumpapple 0.10.0 listing of tests/progs/held_data.omf
 ; cpu 65816, platform gsos
 ; rebuild: ca65 --cpu 65816 -t none -o held_data.o held_data.s
 ;          ld65 -C held_data.cfg -o held_data.bin held_data.o
 ; input: OMF v2 load file; output is the relocated loaded image, segments in file order
+; note: --strict-smc: seed targets are off (--seed-targets turns them back on)
 ; note: relocated pointer at $020030 -> $020023 points into held-back bytes after a call; data pointer, not decoded
 ; note: suggested hint: inline $023000 z (4 call sites look like strings)
 

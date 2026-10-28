@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/g1_merge.bin
+; dumpapple 0.10.0 listing of tests/progs/g1_merge.bin
 ; cpu 6502, platform none
 ; rebuild: ca65 --cpu 6502 -t none -o g1_merge.o g1_merge.s
 ;          ld65 -C g1_merge.cfg -o g1_merge.bin g1_merge.o

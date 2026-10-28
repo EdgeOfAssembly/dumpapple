@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/c29_txyrep.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/c29_txyrep.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_c29_txyrep.o cpuauto_c29_txyrep.s
 ;          ld65 -C cpuauto_c29_txyrep.cfg -o cpuauto_c29_txyrep.bin cpuauto_c29_txyrep.o

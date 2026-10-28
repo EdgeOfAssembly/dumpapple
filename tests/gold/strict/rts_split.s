@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/progs/rts_split.bin
+; dumpapple 0.10.0 listing of tests/progs/rts_split.bin
 ; cpu 65c02, platform none
 ; rebuild: ca65 --cpu 65C02 -t none -o rts_split.o rts_split.s
 ;          ld65 -C rts_split.cfg -o rts_split.bin rts_split.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 ; note: auto table $002018: 2 entries used by $00200A (stopped: index guard)
 
 .setcpu "65C02"

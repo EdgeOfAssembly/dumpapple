@@ -1,7 +1,8 @@
-; dumpapple 0.9.0 listing of tests/src/hint_h06_hint_plus_rom.bin
+; dumpapple 0.10.0 listing of tests/src/hint_h06_hint_plus_rom.bin
 ; cpu 65c02, platform prodos8
 ; rebuild: ca65 --cpu 65C02 -t none -o hint_h06_hint_plus_rom.o hint_h06_hint_plus_rom.s
 ;          ld65 -C hint_h06_hint_plus_rom.cfg -o hint_h06_hint_plus_rom.bin hint_h06_hint_plus_rom.o
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65C02"
 

@@ -358,12 +358,23 @@ rebuild did not assemble/link or differs; the work dir
   inline-string helpers unproven (a note lists those reasons).
   `--strict-smc` drops the assumption: such stores may modify any code.
   It is the worst-case mode: on real programs with even one store through an
-  unresolved pointer it proves almost nothing (decoding stops at the entry
-  point; a real 65816 program decodes 0 bytes), so use it to check a claim, not to
-  disassemble.
+  unresolved pointer it proves almost nothing, so use it to check a claim, not
+  to disassemble. The straight run from a load entry (not `--entry`, not an
+  auto entry) up to and including the first store, call, conditional branch or
+  join executes before any store, so it stays code as on disk (each such line
+  says `decoded as on disk: runs from the entry before any store`); decoding
+  stops at the first questionable point after it. An unconditional `jmp abs`
+  in the run continues it at the target under the same rules; a call (also
+  to ROM, such as `jsr $FC58`) ends it. A site in that run that any other
+  jump or branch also reaches can run again after a store: it is dropped
+  only if some store's range covers it, and is otherwise decoded as usual
+  (a counted loop's body after its `ldy #0` stays code). With `--entry` the header notes
+  that the entry was decoded as on disk although a store may change it.
+  Under `--strict-smc` seed targets and auto regions (raw input only) are
+  off unless `--seed-targets` / `--auto-region` is given; the header says so.
   A bounded store whose possible range covers a whole 64K bank (for example
   `sta $1D00,x` with a 16-bit X of unknown value, or `sta f:$000000,x`) is
-  treated as fully unknown in the same way.
+  treated like a store with a fully unknown target.
   The set of possibly modified bytes is a greatest fixpoint: analysis starts
   with every byte trusted, and each pass recomputes all store ranges (index
   ranges, D sets and pointers) from that pass's own decode, marks every
@@ -375,7 +386,10 @@ rebuild did not assemble/link or differs; the work dir
   unknown-target. Counted loops (`ldx #imm` falling into a straight-line body
   ending in `dex`/`inx` steps and `bpl`/`bne` back) narrow X to the values
   the loop really takes, so `stz 0,x` with `ldx #254; ... dex; dex; bpl`
-  writes only D+0..D+255. When a store writes a known value (an exact
+  writes only D+0..D+255. Under `--strict-smc` a loop's `ldx`/`ldy #imm` that
+  sits in the straight run from the load entry (reached by nothing else)
+  still bounds the loop when a store later overwrites it, since it ran once
+  before any store. When a store writes a known value (an exact
   `sta`/`stx`/`sty`/`stz` of a known register, or a short `mvn`/`mvp` from
   bytes nothing else writes) and both the old and new opcode are flag-only
   one-byte instructions (`nop`, `clc`, `sec`, `cli`, `sei`, `clv`, `cld`,
@@ -462,6 +476,25 @@ rebuild did not assemble/link or differs; the work dir
   by ca65 and is listed as `.byte` of its in-bank bytes with the decoded form as
   a comment (`; 7F/FFFE: AD 34 12 lda a:$1234 (operand wraps to $7F/0000)`); a
   branch whose target is in another 64K window is listed the same way.
+* **Copies and counted loops**: an indexed store is bounded by a counted loop
+  (`ldx #v` / step / `bne`|`bpl`, `ldx #v` / step / `cpx #n` / `bne`, also
+  `cpx #$FF` counting down through 0, and counting up with `cpx #n` / `bcc`;
+  the same with Y). A copy loop `lda S,r` / `sta D,r` that writes the very
+  bytes the listing already shows at D changes nothing and is not a code
+  store. A store recorded from code that a later pass turns back into data
+  no longer counts: the analysis is redone without it.
+* **Auto regions** (raw input without region hints; on by default, off with
+  `--no-auto-region`; off under `--strict-smc` unless `--auto-region`): a recognized copy-then-jump (monitor MOVE `jsr $FE2C`
+  with constant A1/A2/A4, or a page-copy loop) whose jump lands in the copied
+  block makes that block a region listed at its run address (note `auto
+  region`). The copy's own stores do not count as code stores for that
+  block. Skipped when the destination overlaps the file or the mover copies
+  itself.
+* **Seed targets** (on by default, off with `--no-seed-targets`; off under
+  `--strict-smc` unless `--seed-targets`): when decoded
+  code jumps to RAM outside the image, undecoded `jsr`/`jmp` absolute
+  operands that point into the image are seeded as entries if the target
+  follows a terminator, is not fill, and decodes cleanly (note `auto entry`).
 * **Immediate code pointers**: `lda #<x` with `ldx #>x` or `ldy #>x` (either
   order), or `ld? #a; st? p; ld? #b; st? p+1` with the same register (either
   byte first), makes x a code entry when x decodes cleanly to a terminator

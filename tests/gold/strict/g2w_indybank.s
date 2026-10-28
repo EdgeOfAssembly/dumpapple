@@ -1,9 +1,10 @@
-; dumpapple 0.9.0 listing of tests/progs/g2w_indybank.bin
+; dumpapple 0.10.0 listing of tests/progs/g2w_indybank.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o g2w_indybank.o g2w_indybank.s
 ;          ld65 -C g2w_indybank.cfg -o g2w_indybank.bin g2w_indybank.o
 ; assumes CSW hook preserves X/Y (an inline-string helper calls COUT $FDED; nothing in the image stores to CSW $36/$37)
 ; assumes decimal mode clear at entry (an inline-string helper adds/subtracts; no cld/sed on the way to its call)
+; note: --strict-smc: seed targets and auto regions are off (--seed-targets / --auto-region turn them back on)
 
 .setcpu "65816"
 

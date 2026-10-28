@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/rtl_long.bin
+; dumpapple 0.10.0 listing of tests/progs/rtl_long.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o rtl_long.o rtl_long.s
 ;          ld65 -C rtl_long.cfg -o rtl_long.bin rtl_long.o

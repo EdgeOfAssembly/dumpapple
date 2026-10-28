@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/progs/quit_err.bin
+; dumpapple 0.10.0 listing of tests/progs/quit_err.bin
 ; cpu 6502, platform prodos8
 ; rebuild: ca65 --cpu 6502 -t none -o quit_err.o quit_err.s
 ;          ld65 -C quit_err.cfg -o quit_err.bin quit_err.o

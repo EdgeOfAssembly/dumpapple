@@ -1,4 +1,4 @@
-; dumpapple 0.9.0 listing of tests/cpu_auto/x11_unkxce.bin
+; dumpapple 0.10.0 listing of tests/cpu_auto/x11_unkxce.bin
 ; cpu 65816, platform none
 ; rebuild: ca65 --cpu 65816 -t none -o cpuauto_x11_unkxce.o cpuauto_x11_unkxce.s
 ;          ld65 -C cpuauto_x11_unkxce.cfg -o cpuauto_x11_unkxce.bin cpuauto_x11_unkxce.o
